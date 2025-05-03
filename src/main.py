@@ -13,9 +13,11 @@ from pathlib import Path
 # Fix the import to work when running from src directory
 try:
     from src.config import config
+    from src.scrapers.factory import get_scraper
 except ModuleNotFoundError:
     # When running directly from src directory
     from config import config
+    from scrapers.factory import get_scraper
 
 
 def setup_logging() -> None:
@@ -72,11 +74,31 @@ def main() -> None:
     
     logger.info(f"Found {len(config.suppliers)} supplier(s) to process")
     
-    # Placeholder for supplier processing loop
+    # Process each supplier using the ScraperFactory
     for supplier in config.suppliers:
         logger.info(f"Processing supplier: {supplier.name}")
-        # In future stories, we'll use the ScraperFactory to get the appropriate scraper
-        # and process each supplier
+        try:
+            # Get the appropriate scraper for this supplier
+            scraper = get_scraper(supplier)
+            logger.info(f"Using scraper: {scraper}")
+            
+            # If login is required, attempt to login
+            if supplier.requires_login and supplier.username and supplier.password:
+                logger.info(f"Attempting login for supplier: {supplier.name}")
+                login_success = scraper.login(supplier.username, supplier.password)
+                if not login_success:
+                    logger.error(f"Login failed for supplier: {supplier.name}")
+                    continue
+                logger.info(f"Login successful for supplier: {supplier.name}")
+            
+            # In future stories, we'll implement the actual scraping logic here
+            # For now, just log that we would process the supplier
+            logger.info(f"Would process supplier: {supplier.name} with scraper: {scraper.__class__.__name__}")
+            
+        except ImportError as e:
+            logger.error(f"Failed to load scraper for supplier {supplier.name}: {e}")
+        except Exception as e:
+            logger.error(f"Error processing supplier {supplier.name}: {e}", exc_info=True)
     
     logger.info("Scraping process completed")
 

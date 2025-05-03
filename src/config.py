@@ -79,6 +79,7 @@ class SupplierConfig(BaseModel):
     name: str = Field(..., description="Name of the supplier")
     url: str = Field(..., description="URL of the supplier website")
     scraper_type: str = Field(default="static", description="Type of scraper to use (static or dynamic)")
+    module_name: Optional[str] = Field(default=None, description="Optional specific module name for the scraper")
     requires_login: bool = Field(default=False, description="Whether login is required")
     username: Optional[str] = Field(default=None, description="Username for login")
     password: Optional[str] = Field(default=None, description="Password for login")
