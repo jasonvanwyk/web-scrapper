@@ -1,0 +1,136 @@
+**Product Data Collection Automation – Product Requirements Document (PRD)**
+
+**1. Document Purpose**
+Defines the functional and non‑functional requirements, user stories, success metrics, and constraints for an automated product data extraction solution targeting one or more supplier websites, delivering standardized CSV outputs.
+
+---
+
+**2. Project Overview**
+
+* **Problem Statement:** Manual collection of product details from multiple suppliers is time‑consuming, error‑prone, and difficult to scale.
+* **Solution Vision:** A reusable, Python‑based automation script that logs in (if required), scrapes key product information, downloads or references images, and outputs a clean CSV file.
+* **Goals:**
+
+  * Reduce data gathering time by ≥80%.
+  * Eliminate manual copy‑paste errors.
+  * Enable monthly scheduled runs with minimal intervention.
+
+---
+
+**3. Stakeholders**
+
+* **Client:** Retail or distribution manager consolidating product catalogs.
+* **End Users:** Inventory teams, ERP import tools, e‑commerce managers.
+* **Developer:** Freelancer implementing, testing, and documenting the script.
+
+---
+
+**4. Scope & Out of Scope**
+
+* **In Scope:**
+
+  * Scrape public or authenticated pages of supplier sites.
+  * Extract: Product Name, SKU, Description, Supplier Name, Cost to Me, Retail Price, Colorways, Image URL or file.
+  * Export to CSV (UTF‑8).
+  * Optional: Download image files to directory.
+  * Scheduling: cron or internal scheduler for monthly execution.
+
+* **Out of Scope:**
+
+  * Data transformation beyond field sanitization.
+  * Front‑end UI or dashboard.
+  * Database integration (unless requested separately).
+
+---
+
+**5. User Stories**
+
+1. **As a data manager**, I want to run a script that logs into each supplier website so that I can automatically gather product data without manual login each time.
+2. **As an inventory planner**, I want a CSV with standardized columns so I can import data into my tracking system.
+3. **As a system admin**, I want the script to run automatically on a schedule so I don’t need to remember manual execution.
+4. **As a QA engineer**, I want clear error logs when scraping fails so I can troubleshoot issues quickly.
+
+---
+
+**6. Functional Requirements**
+
+* **FR1:** Authenticate to supplier portals (if applicable) using secure credentials.
+* **FR2:** Navigate to product listing pages, handling pagination.
+* **FR3:** Extract and sanitize each record’s fields:
+
+  * Product Name (string)
+  * SKU (string)
+  * Description (rich text/plain)
+  * Supplier Name (string)
+  * Cost to Me (numeric)
+  * Retail Price (numeric)
+  * Colorways (list→CSV)
+  * Image URL or download image file
+* **FR4:** Write output to a UTF‑8 CSV file with header row.
+* **FR5:** (Optional) Save image files to local folder with naming convention.
+* **FR6:** Send basic notification (console log or email) upon completion or error.
+
+---
+
+**7. Non-Functional Requirements**
+
+* **NFR1:** Execution time ≤5 minutes for ≤500 products.
+* **NFR2:** Portable across Linux/macOS (Python 3.9+).
+* **NFR3:** Configurable via `.env` or `config.json` (credentials, target URLs, output paths).
+* **NFR4:** Robust error handling; skip broken entries without halting entire run.
+* **NFR5:** Clear inline code documentation and external README.
+
+---
+
+**8. Data & Security Requirements**
+
+* **DR1:** Store credentials securely; never commit to VCS.
+* **DR2:** Respect `robots.txt` and terms of service.
+* **DR3:** Validate email/phone strings (if extracted) to avoid malformed entries.
+
+---
+
+**9. Success Metrics**
+
+* ≥95% data accuracy vs. manual extraction on first run.
+* Monthly run completes without intervention 100% of the time.
+* Zero critical errors in scheduled logs over 3 months.
+
+---
+
+**10. Assumptions & Dependencies**
+
+* Supplier websites remain structurally consistent for baseline period.
+* Client will supply valid credentials for private portals.
+* Python environment (3.9+) and necessary libraries will be installed on a server.
+
+---
+
+**11. Acceptance Criteria**
+
+* Demo script run against a sample site with delivered CSV.
+* README with setup instructions and scheduler configuration.
+* Peer review of code for compliance with requirements.
+
+---
+
+**12. Timeline**
+
+| Phase                    | Estimate     |
+| ------------------------ | ------------ |
+| Environment Setup & Auth | 0.5 days     |
+| Scraper Logic & Mapping  | 1 day        |
+| CSV & Image Handling     | 0.5 days     |
+| Error Handling & Logging | 0.5 days     |
+| Scheduling & Automation  | 0.5 days     |
+| Testing & QA             | 0.5 days     |
+| Documentation            | 0.5 days     |
+| **Total**                | **4.5 days** |
+
+---
+
+**13. Risks & Mitigations**
+
+* **R1:** Site layout changes → implement modular selector config.
+* **R2:** CAPTCHA blocking → use headless browser fallback.
+* **R3:** Credential expiry → add clear logging for auth failures.
