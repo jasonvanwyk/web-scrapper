@@ -13,6 +13,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 7: Basic Image Handling (URL Extraction)](docs/issues/story7_issues.md)
 - [Story 8: Data Parser Module](docs/issues/story8_issues.md)
 - [Story 9: Data Sanitizer & Validator Module](docs/issues/story9_issues.md)
+- [Story 10: CSV Writer Module](docs/issues/story10_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -25,6 +26,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 2: Import Path Resolution in Factory](docs/issues/story2_issues.md#issue-3-import-path-resolution-in-factory)
 - [Story 2: Circular Import in Tests](docs/issues/story2_issues.md#issue-4-circular-import-in-tests)
 - [Story 6: Path Resolution for Output Directory](docs/issues/story6_issues.md#issue-2-path-resolution-for-output-directory)
+- [Story 10: Output Directory Creation](docs/issues/story10_issues.md#issue-1-output-directory-creation)
 
 #### Testing Challenges
 - [Story 1: Testing Module Execution](docs/issues/story1_issues.md#issue-4-testing-module-execution)
@@ -65,6 +67,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 8: URL Handling for Image URLs](docs/issues/story8_issues.md#issue-5-url-handling-for-image-urls)
 - [Story 9: Currency Code Handling in Price Normalization](docs/issues/story9_issues.md#issue-1-currency-code-handling-in-price-normalization)
 - [Story 9: URL Validation Regex Pattern](docs/issues/story9_issues.md#issue-2-url-validation-regex-pattern)
+- [Story 10: UTF-8 Encoding for International Characters](docs/issues/story10_issues.md#issue-3-utf-8-encoding-for-international-characters)
 
 #### Integration and Reuse
 - [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
@@ -76,6 +79,7 @@ This document serves as an index to the reorganized issue documentation for the 
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
+- [Story 10: Resource Management with Context Managers](docs/issues/story10_issues.md#issue-2-resource-management-with-context-managers)
 
 ## Summary of Key Learnings
 

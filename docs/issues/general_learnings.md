@@ -156,6 +156,16 @@ This document captures general learnings and best practices derived from challen
 
 5. **Timestamped Filenames**: Consider using timestamps in filenames for output files to avoid overwriting previous results and provide an audit trail.
 
+6. **Output Directory Verification**: Always verify that output directories exist before attempting to write files, and create them if necessary using `os.makedirs(exist_ok=True)`.
+
+7. **Context Managers for File Operations**: Use context managers (`with` statement) when working with files to ensure proper resource cleanup, even in error scenarios.
+
+8. **Explicit File Closing**: When not using context managers, ensure files are explicitly closed in a `finally` block to prevent resource leaks.
+
+9. **Configurable File Paths**: Make file paths configurable to support different environments and use cases, with sensible defaults.
+
+10. **Absolute Paths**: Use absolute paths when dealing with file operations to avoid issues with relative paths and different execution contexts.
+
 ## Library Selection and Integration
 
 1. **Specialized Libraries**: Use specialized libraries for specific tasks rather than relying on general-purpose libraries with limited support. For example, use lxml for XPath parsing rather than BeautifulSoup's limited XPath support.
