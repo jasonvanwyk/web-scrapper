@@ -12,6 +12,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 6: CSV Output Storage Module](docs/issues/story6_issues.md)
 - [Story 7: Basic Image Handling (URL Extraction)](docs/issues/story7_issues.md)
 - [Story 8: Data Parser Module](docs/issues/story8_issues.md)
+- [Story 9: Data Sanitizer & Validator Module](docs/issues/story9_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -62,9 +63,16 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 7: Consistent URL Handling Across Scraper Types](docs/issues/story7_issues.md#issue-2-consistent-url-handling-across-scraper-types)
 - [Story 8: HTML Content Processing](docs/issues/story8_issues.md#issue-3-html-content-processing)
 - [Story 8: URL Handling for Image URLs](docs/issues/story8_issues.md#issue-5-url-handling-for-image-urls)
+- [Story 9: Currency Code Handling in Price Normalization](docs/issues/story9_issues.md#issue-1-currency-code-handling-in-price-normalization)
+- [Story 9: URL Validation Regex Pattern](docs/issues/story9_issues.md#issue-2-url-validation-regex-pattern)
 
 #### Integration and Reuse
 - [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
+- [Story 9: Error Preservation in Validation Pipeline](docs/issues/story9_issues.md#issue-4-error-preservation-in-validation-pipeline)
+
+#### Validation and Type Handling
+- [Story 9: Type Handling in Pydantic Model](docs/issues/story9_issues.md#issue-3-type-handling-in-pydantic-model)
+- [Story 9: None Value Handling in Validation Functions](docs/issues/story9_issues.md#issue-5-none-value-handling-in-validation-functions)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)

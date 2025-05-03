@@ -72,6 +72,30 @@ This document captures general learnings and best practices derived from challen
 
 9. **Type-Aware Processing**: Design functions to handle different input types explicitly rather than relying on duck typing for critical parsing operations. Document expected input types clearly.
 
+10. **Error Preservation**: Ensure error information is preserved throughout the data processing pipeline to maintain context about failures and simplify debugging.
+
+11. **None Value Handling**: Be explicit about how None values are handled in data processing functions. Consider whether to convert to defaults, raise errors, or handle specially.
+
+12. **Currency and Number Formats**: Implement robust handling for different currency symbols, codes, and number formats from various regions to ensure consistent data extraction.
+
+13. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
+
+## Validation and Type Handling
+
+1. **Input Validation Strategy**: Implement validation as close to the data source as possible, but also consider validation at system boundaries and before critical operations.
+
+2. **Graceful Validation Failures**: Design validation to fail gracefully and provide useful error messages rather than crashing or returning unexpected results.
+
+3. **Type Conversion vs. Validation**: Distinguish between type conversion (making data usable) and validation (ensuring data correctness) in your processing pipeline.
+
+4. **Validation Libraries**: When using validation libraries like Pydantic, understand their type handling behavior and prepare data accordingly before validation.
+
+5. **Default Values**: Provide sensible default values for all fields to ensure your system can continue functioning even with incomplete data.
+
+6. **Validation Context**: Include context in validation errors to help identify the source and nature of the problem.
+
+7. **Progressive Validation**: Consider implementing progressive validation where critical errors fail fast but non-critical issues are logged and processing continues.
+
 ## Resource Management
 
 1. **Context Managers**: Implement and use context managers (`__enter__` and `__exit__` methods) for classes that manage resources like file handles, network connections, or database sessions.

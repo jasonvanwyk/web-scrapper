@@ -7,7 +7,14 @@ data extracted from HTML content.
 
 import logging
 import re
+import html
 from typing import Any, Dict, List, Optional, Union
+from urllib.parse import urljoin
+try:
+    from pydantic import BaseModel, Field, field_validator
+except ImportError:
+    # For Pydantic v1 compatibility
+    from pydantic import BaseModel, Field, validator as field_validator
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +110,8 @@ def normalize_currency(
         for code in currency_codes:
             if code in price_text:
                 currency = code
+                # Remove the currency code for conversion
+                price_text = price_text.replace(code, "")
                 break
     
     # Convert to float
@@ -201,9 +210,117 @@ def validate_required_field(value: Any) -> bool:
     return True
 
 
+def sanitize_html_content(text: Optional[str]) -> str:
+    """
+    Remove HTML tags and decode HTML entities from text.
+    
+    Args:
+        text: Input text that may contain HTML
+        
+    Returns:
+        Cleaned text with HTML tags removed and entities decoded
+    """
+    if text is None:
+        return ""
+    
+    # Remove HTML tags using regex
+    clean_text = re.sub(r'<[^>]*>', '', text)
+    
+    # Decode HTML entities
+    clean_text = html.unescape(clean_text)
+    
+    # Normalize whitespace
+    return normalize_text(clean_text)
+
+
+def normalize_url(url: Optional[str], base_url: Optional[str] = None) -> str:
+    """
+    Normalize URL by converting relative URLs to absolute URLs.
+    
+    Args:
+        url: URL to normalize
+        base_url: Base URL to use for relative URLs
+        
+    Returns:
+        Normalized URL
+    """
+    if not url:
+        return ""
+    
+    # Strip whitespace
+    url = strip_whitespace(url)
+    
+    # If base_url is provided and url is relative, convert to absolute
+    if base_url and not (url.startswith('http://') or url.startswith('https://')):
+        return urljoin(base_url, url)
+    
+    return url
+
+
+def validate_url(url: str) -> bool:
+    """
+    Validate if a string is a properly formatted URL.
+    
+    Args:
+        url: URL string to validate
+        
+    Returns:
+        True if URL format is valid, False otherwise
+    """
+    if url is None:
+        raise TypeError("URL cannot be None")
+        
+    if not url:
+        return False
+    
+    # Basic URL validation using regex
+    url_pattern = re.compile(
+        r'^(https?://)'  # http:// or https://
+        r'([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?'  # domain
+        r'(/[a-zA-Z0-9_\-\.~!*\'();:@&=+$,/%#\[\]?]*)?$'  # path, query, fragment
+    )
+    return bool(url_pattern.match(url))
+
+
+# Pydantic model for product data validation
+class ProductData(BaseModel):
+    """Pydantic model for product data validation."""
+    product_name: str = Field(default="")
+    sku: str = Field(default="")
+    description: str = Field(default="")
+    supplier_name: str = Field(default="")
+    cost: float = Field(default=0.0)
+    price: float = Field(default=0.0)
+    colorways: List[str] = Field(default_factory=list)
+    image_url: str = Field(default="")
+    
+    @field_validator('sku')
+    def validate_sku(cls, v):
+        """Validate SKU format."""
+        if not validate_sku_format(v):
+            logger.warning(f"Invalid SKU format: {v}")
+        return v
+    
+    @field_validator('cost', 'price')
+    def validate_price(cls, v):
+        """Validate price is non-negative."""
+        if v < 0:
+            logger.warning(f"Negative price/cost value: {v}")
+            return 0.0
+        return v
+    
+    @field_validator('image_url')
+    def validate_image_url(cls, v):
+        """Validate image URL format."""
+        if v and not validate_url(v):
+            logger.warning(f"Invalid image URL format: {v}")
+        return v
+
+
 def clean_and_validate_product_data(
     data: Dict[str, Any],
-    required_fields: Optional[List[str]] = None
+    required_fields: Optional[List[str]] = None,
+    base_url: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Clean and validate product data dictionary.
@@ -211,42 +328,68 @@ def clean_and_validate_product_data(
     Args:
         data: Dictionary of product data
         required_fields: List of field names that are required
+        base_url: Base URL for resolving relative URLs
         
     Returns:
         Cleaned and validated data dictionary with additional validation info
     """
-    required_fields = required_fields or ["name", "sku"]
-    result = {
-        "data": {},
-        "validation": {
-            "is_valid": True,
-            "missing_required_fields": []
+    required_fields = required_fields or ["product_name", "sku"]
+    
+    # Check if there's an error field, if so, bypass validation
+    if "error" in data:
+        return {
+            "product_name": data.get("product_name", ""),
+            "sku": data.get("sku", ""),
+            "description": data.get("description", ""),
+            "supplier_name": data.get("supplier_name", ""),
+            "cost": data.get("cost", 0.0),
+            "price": data.get("price", 0.0),
+            "colorways": data.get("colorways", []),
+            "image_url": data.get("image_url", ""),
+            "error": data["error"]
         }
+    
+    # Clean and normalize data
+    cleaned_data = {}
+    
+    # Product name
+    cleaned_data["product_name"] = normalize_text(data.get("product_name", ""))
+    
+    # SKU
+    cleaned_data["sku"] = strip_whitespace(data.get("sku", ""))
+    
+    # Description - remove HTML tags if present
+    cleaned_data["description"] = sanitize_html_content(data.get("description", ""))
+    
+    # Supplier name
+    cleaned_data["supplier_name"] = normalize_text(data.get("supplier_name", ""))
+    
+    # Cost and price
+    cleaned_data["cost"] = to_float(data.get("cost", 0.0)) if isinstance(data.get("cost"), str) else float(data.get("cost", 0.0))
+    cleaned_data["price"] = to_float(data.get("price", 0.0)) if isinstance(data.get("price"), str) else float(data.get("price", 0.0))
+    
+    # Colorways
+    cleaned_data["colorways"] = normalize_list(data.get("colorways", []))
+    
+    # Image URL - normalize relative URLs
+    cleaned_data["image_url"] = normalize_url(data.get("image_url", ""), base_url)
+    
+    # Validate using Pydantic model
+    try:
+        validated_data = ProductData(**cleaned_data).model_dump()
+    except Exception as e:
+        logger.error(f"Validation error: {str(e)}")
+        validated_data = cleaned_data
+    
+    # Check required fields
+    validation = {
+        "is_valid": True,
+        "missing_required_fields": []
     }
     
-    # Clean and process each field
-    for field, value in data.items():
-        cleaned_value = value
-        
-        # Apply appropriate cleaning based on field name
-        if field in ["name", "description", "supplier_name"]:
-            cleaned_value = normalize_text(value)
-        elif field in ["price", "cost"]:
-            if isinstance(value, (int, float)):
-                cleaned_value = float(value)
-            else:
-                cleaned_value = to_float(value)
-        elif field == "sku":
-            cleaned_value = strip_whitespace(value)
-        elif field == "colorways":
-            cleaned_value = normalize_list(value)
-        
-        result["data"][field] = cleaned_value
-    
-    # Validate required fields
     for field in required_fields:
-        if field not in result["data"] or not validate_required_field(result["data"][field]):
-            result["validation"]["is_valid"] = False
-            result["validation"]["missing_required_fields"].append(field)
+        if field not in validated_data or not validate_required_field(validated_data[field]):
+            validation["is_valid"] = False
+            validation["missing_required_fields"].append(field)
     
-    return result
+    return {**validated_data, "validation": validation}
