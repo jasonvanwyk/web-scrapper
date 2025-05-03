@@ -266,5 +266,172 @@ class TestRequestHandler(unittest.TestCase):
                 pass
             mock_close.assert_called_once()
     
+    @mock.patch("requests.Session.request")
+    def test_head(self, mock_request):
+        """Test the head method."""
+        # Set up the mock
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 200
+        mock_request.return_value = mock_response
+        
+        # Call the head method
+        with mock.patch.object(self.handler, "_add_delay"):
+            with mock.patch.object(self.handler, "_rotate_user_agent"):
+                with mock.patch.object(self.handler, "_check_robots_txt", return_value=True):
+                    response = self.handler.head("https://example.com")
+        
+        # Check that the request was made with the correct arguments
+        mock_request.assert_called_once_with(
+            "HEAD",
+            "https://example.com",
+            timeout=self.timeout
+        )
+        
+        # Check that the response was returned
+        self.assertEqual(response, mock_response)
+    
+    @mock.patch("requests.Session.request")
+    def test_put(self, mock_request):
+        """Test the put method."""
+        # Set up the mock
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 200
+        mock_request.return_value = mock_response
+        
+        # Call the put method
+        with mock.patch.object(self.handler, "_add_delay"):
+            with mock.patch.object(self.handler, "_rotate_user_agent"):
+                with mock.patch.object(self.handler, "_check_robots_txt", return_value=True):
+                    response = self.handler.put("https://example.com", data={"key": "value"})
+        
+        # Check that the request was made with the correct arguments
+        mock_request.assert_called_once_with(
+            "PUT",
+            "https://example.com",
+            data={"key": "value"},
+            timeout=self.timeout
+        )
+        
+        # Check that the response was returned
+        self.assertEqual(response, mock_response)
+    
+    @mock.patch("requests.Session.request")
+    def test_delete(self, mock_request):
+        """Test the delete method."""
+        # Set up the mock
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 200
+        mock_request.return_value = mock_response
+        
+        # Call the delete method
+        with mock.patch.object(self.handler, "_add_delay"):
+            with mock.patch.object(self.handler, "_rotate_user_agent"):
+                with mock.patch.object(self.handler, "_check_robots_txt", return_value=True):
+                    response = self.handler.delete("https://example.com")
+        
+        # Check that the request was made with the correct arguments
+        mock_request.assert_called_once_with(
+            "DELETE",
+            "https://example.com",
+            timeout=self.timeout
+        )
+        
+        # Check that the response was returned
+        self.assertEqual(response, mock_response)
+    
+    def test_init_with_proxies(self):
+        """Test initialization with proxies."""
+        # Create a request handler with proxies
+        proxies = {
+            "http": "http://proxy.example.com:8080",
+            "https": "https://proxy.example.com:8080"
+        }
+        handler = RequestHandler(
+            user_agents=self.user_agents,
+            timeout=self.timeout,
+            max_retries=self.max_retries,
+            delay=self.delay,
+            respect_robots_txt=False,
+            proxies=proxies
+        )
+        
+        # Check that the proxies were set
+        self.assertEqual(handler.session.proxies, proxies)
+        
+        # Clean up
+        handler.close()
+    
+    @mock.patch("requests.Session.request")
+    def test_request_with_http_error(self, mock_request):
+        """Test the _request method with HTTP error."""
+        # Set up the mock to raise an HTTPError
+        mock_response = mock.MagicMock()
+        mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("404 Client Error")
+        mock_request.return_value = mock_response
+        
+        # Call the get method and check that it raises an HTTPError
+        with mock.patch.object(self.handler, "_add_delay"):
+            with mock.patch.object(self.handler, "_rotate_user_agent"):
+                with mock.patch.object(self.handler, "_check_robots_txt", return_value=True):
+                    with self.assertRaises(requests.exceptions.HTTPError):
+                        self.handler.get("https://example.com")
+        
+        # We don't check the exact number of calls because the retry logic
+        # in tenacity will make multiple calls
+        self.assertGreaterEqual(mock_request.call_count, 1)
+    
+    @mock.patch("requests.Session.request")
+    def test_request_with_connection_error(self, mock_request):
+        """Test the _request method with connection error."""
+        # Set up the mock to raise a ConnectionError
+        mock_request.side_effect = requests.exceptions.ConnectionError("Connection refused")
+        
+        # Call the get method and check that it raises a ConnectionError after retries
+        with mock.patch.object(self.handler, "_add_delay"):
+            with mock.patch.object(self.handler, "_rotate_user_agent"):
+                with mock.patch.object(self.handler, "_check_robots_txt", return_value=True):
+                    with self.assertRaises(requests.exceptions.ConnectionError):
+                        self.handler.get("https://example.com")
+        
+        # Check that the request was made max_retries + 1 times
+        self.assertEqual(mock_request.call_count, self.max_retries + 1)
+    
+    def test_robots_txt_cache(self):
+        """Test the robots.txt cache."""
+        # Set respect_robots_txt to True
+        self.handler.respect_robots_txt = True
+        
+        # Mock requests.get to return a robots.txt file
+        with mock.patch("requests.get") as mock_get:
+            mock_response = mock.MagicMock()
+            mock_response.status_code = 200
+            mock_response.text = """
+            User-agent: *
+            Disallow: /private/
+            Allow: /
+            """
+            mock_get.return_value = mock_response
+            
+            # Call _check_robots_txt twice for the same domain
+            self.handler._check_robots_txt("https://example.com/page1")
+            self.handler._check_robots_txt("https://example.com/page2")
+            
+            # Check that requests.get was called only once
+            mock_get.assert_called_once()
+            
+            # Check that the robots.txt parser is in the cache
+            # The key in the cache is the full domain with protocol
+            self.assertIn("https://example.com", self.handler.robots_cache)
+    
+    def test_close(self):
+        """Test the close method."""
+        # Mock the session's close method
+        with mock.patch.object(self.handler.session, "close") as mock_close:
+            # Call the close method
+            self.handler.close()
+            
+            # Check that the session's close method was called
+            mock_close.assert_called_once()
+    
 if __name__ == "__main__":
     unittest.main()

@@ -17,6 +17,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 12: Implement BaseScraper Abstract Class](docs/issues/story12_issues.md)
 - [Story 13: Implement StaticScraper Concrete Class](docs/issues/story13_issues.md)
 - [Story 14: Implement DynamicScraper Concrete Class](docs/issues/story14_issues.md)
+- [Story 15: Implement RequestHandler Module](docs/issues/story15_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -39,6 +40,8 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: Test Assertion Order Dependency](docs/issues/story3_issues.md#issue-4-test-assertion-order-dependency)
 - [Story 3: Test Flexibility for Parameter Order](docs/issues/story3_issues.md#issue-5-test-flexibility-for-parameter-order)
 - [Story 4: Testing Browser Automation Code](docs/issues/story4_issues.md#issue-4-testing-browser-automation-code)
+- [Story 14: Testing Browser Automation Code](docs/issues/story14_issues.md#issue-4-testing-browser-automation-code)
+- [Story 15: Test Assertion Mismatch with Retry Logic](docs/issues/story15_issues.md#issue-1-test-assertion-mismatch-with-retry-logic)
 - [Story 5: Test Design for Floating-Point Comparisons](docs/issues/story5_issues.md#issue-4-test-design-for-floating-point-comparisons)
 - [Story 6: Directory Cleanup in Tests](docs/issues/story6_issues.md#issue-1-directory-cleanup-in-tests)
 - [Story 8: Testing Edge Cases and Error Conditions](docs/issues/story8_issues.md#issue-2-error-information-preservation)
@@ -51,6 +54,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Playwright API Stability](docs/issues/story4_issues.md#issue-6-playwright-api-stability)
 - [Story 5: Number Format Handling in Transformer Module](docs/issues/story5_issues.md#issue-1-number-format-handling-in-transformer-module)
 - [Story 8: XPath Selector Support](docs/issues/story8_issues.md#issue-1-xpath-selector-support)
+- [Story 15: Pydantic Deprecation Warnings](docs/issues/story15_issues.md#issue-3-pydantic-deprecation-warnings)
 
 #### Browser Automation Issues
 - [Story 4: Browser Lifecycle Management](docs/issues/story4_issues.md#issue-1-browser-lifecycle-management)

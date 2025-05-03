@@ -32,6 +32,10 @@ This document captures general learnings and best practices derived from challen
 
 10. **URL Handling in Tests**: When mocking methods that handle URLs, be careful about URL concatenation to avoid creating malformed URLs. Pay attention to whether base URLs are already included in parameters.
 
+11. **Testing Retry Logic**: When testing components with retry logic, assertions about the number of calls should be flexible enough to accommodate the retry behavior. Instead of asserting an exact number of calls, assert a minimum number of calls or check other aspects of the behavior that are more predictable.
+
+12. **Cache Key Format Testing**: When testing caching mechanisms, it's important to understand the exact format of cache keys used by the implementation. Inspect the implementation carefully or use debugging to determine the actual key format rather than making assumptions.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -45,6 +49,8 @@ This document captures general learnings and best practices derived from challen
 5. **File Operation Safety**: Always check for file existence, handle permissions issues, and use proper error handling for all file operations. Consider using context managers to ensure resources are properly closed.
 
 6. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline and included in the final output. This helps with debugging and provides better feedback to users.
+
+7. **Retry Mechanism Testing**: Test retry mechanisms thoroughly with different types of failures to ensure they behave as expected. Consider both transient errors that should trigger retries and permanent errors that should fail immediately.
 
 ## Configuration and Validation
 
@@ -148,6 +154,10 @@ This document captures general learnings and best practices derived from challen
 
 7. **Filename Generation**: When generating filenames from URLs or other external data, implement robust handling for special characters, missing extensions, and uniqueness.
 
+8. **Robots.txt Handling**: When implementing web scraping solutions, consider respecting robots.txt directives as a best practice. Implement caching for robots.txt files to avoid repeated requests to the same domain.
+
+9. **User-Agent Management**: Implement proper User-Agent management in HTTP clients, including rotation from a list of realistic User-Agents to minimize detection and blocking.
+
 ## Browser Automation Best Practices
 
 1. **Resource Management**: Always ensure proper cleanup of browser resources, even in error scenarios, to prevent memory leaks and orphaned processes.
@@ -205,6 +215,8 @@ This document captures general learnings and best practices derived from challen
 2. **Consistent Interfaces**: When integrating multiple libraries for similar tasks (like CSS and XPath selectors), create consistent interfaces and error handling to simplify usage.
 
 3. **Reuse Existing Code**: Leverage existing functionality from other modules when extending capabilities to avoid duplication and ensure consistent behavior.
+
+4. **Dependency Deprecation Monitoring**: Regularly check for deprecation warnings in dependencies and plan for migrations to newer API versions. This is especially important for rapidly evolving libraries like Pydantic where major version changes can introduce breaking changes.
 
 ## Abstract Class Design and Implementation
 
