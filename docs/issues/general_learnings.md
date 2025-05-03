@@ -62,6 +62,14 @@ This document captures general learnings and best practices derived from challen
 
 4. **Configuration Flexibility**: Make configuration options flexible enough to handle different use cases, but with sensible defaults to simplify common scenarios.
 
+5. **Environment Variable Prioritization**: When using environment variables for configuration, ensure proper prioritization between different sources (OS environment variables should take precedence over .env files).
+
+6. **Secure Credential Management**: Never hardcode credentials in source code. Use environment variables, secure vaults, or dedicated secret management services for sensitive information.
+
+7. **Configuration Access Patterns**: Provide both global access patterns for convenience and explicit initialization for testing and specialized use cases.
+
+8. **Configuration Documentation**: Document all configuration options, their default values, and expected formats to make the system easier to configure correctly.
+
 ## Data Processing and Transformation
 
 1. **Internationalization**: Consider different regional formats when handling numeric and date data. Implement robust parsing for different number formats (e.g., US vs. European).
@@ -105,6 +113,8 @@ This document captures general learnings and best practices derived from challen
 6. **Validation Context**: Include context in validation errors to help identify the source and nature of the problem.
 
 7. **Progressive Validation**: Consider implementing progressive validation where critical errors fail fast but non-critical issues are logged and processing continues.
+
+8. **Sensitive Data Handling**: Use specialized types like Pydantic's `SecretStr` for sensitive data to prevent accidental exposure in logs, string representations, or error messages.
 
 ## Resource Management
 

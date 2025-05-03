@@ -21,6 +21,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 16: Implement BrowserHandler Module](docs/issues/story16_issues.md)
 - [Story 17: Implement Parser & Transformer Module](docs/issues/story17_issues.md)
 - [Story 20: Implement Basic Logging Module Configuration](docs/issues/story20_issues.md)
+- [Story 21: Implement Secure Configuration Loading](docs/issues/story21_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -108,6 +109,9 @@ This document serves as an index to the reorganized issue documentation for the 
 
 #### Configuration and Environment Variables
 - [Story 20: Environment Variable Handling in Tests](docs/issues/story20_issues.md#issue-2-environment-variable-handling-in-tests)
+- [Story 21: Environment Variable Prioritization](docs/issues/story21_issues.md#issue-3-environment-variable-prioritization)
+- [Story 21: Secure Credential Management](docs/issues/story21_issues.md#issue-1-balancing-security-and-usability)
+- [Story 21: Cloud Secrets Management Integration](docs/issues/story21_issues.md#issue-5-extensibility-for-cloud-secrets-management)
 
 ## Summary of Key Learnings
 

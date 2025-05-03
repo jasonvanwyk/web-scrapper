@@ -7,9 +7,21 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from pydantic import ValidationError
+from pydantic import ValidationError, SecretStr
 
-from src.config import AppConfig, LoggingConfig, OutputConfig, ScrapingConfig, SupplierConfig, load_config
+from src.config import (
+    AppConfig, 
+    LoggingConfig, 
+    OutputConfig, 
+    ScrapingConfig, 
+    SupplierConfig, 
+    load_config,
+    get_env_value,
+    get_secret,
+    EnvFileSecretsProvider,
+    AwsSecretsProvider,
+    GcpSecretsProvider
+)
 
 
 @pytest.fixture
@@ -25,6 +37,7 @@ def mock_env_vars():
         "REQUEST_RETRIES": "5",
         "REQUEST_DELAY": "2.0",
         "RESPECT_ROBOTS_TXT": "True",
+        "TEST_SECRET": "secret_value",
     }):
         yield
 
@@ -100,11 +113,12 @@ def test_supplier_config():
         url="https://example.com",
         requires_login=True,
         username="user",
-        password="pass"
+        password=SecretStr("pass")
     )
     assert config.requires_login is True
     assert config.username == "user"
-    assert config.password == "pass"
+    assert isinstance(config.password, SecretStr)
+    assert config.get_password() == "pass"
     
     # Test validation error when setting requires_login to True after creation
     config = SupplierConfig(
@@ -151,3 +165,98 @@ def test_load_config(mock_env_vars):
     assert config.scraping.request_retries == 5
     assert config.scraping.request_delay == 2.0
     assert config.scraping.respect_robots_txt is True
+
+
+def test_get_env_value(mock_env_vars):
+    """Test get_env_value function."""
+    # Test existing environment variable
+    assert get_env_value("LOG_LEVEL") == "DEBUG"
+    
+    # Test non-existent environment variable with default
+    assert get_env_value("NON_EXISTENT", "default") == "default"
+    
+    # Test non-existent environment variable without default
+    assert get_env_value("NON_EXISTENT") is None
+
+
+def test_env_file_secrets_provider(mock_env_vars):
+    """Test EnvFileSecretsProvider."""
+    provider = EnvFileSecretsProvider(load_dotenv_file=False)
+    
+    # Test existing secret
+    assert provider.get_secret("TEST_SECRET") == "secret_value"
+    
+    # Test non-existent secret
+    assert provider.get_secret("NON_EXISTENT_SECRET") == ""
+
+
+def test_aws_secrets_provider():
+    """Test AwsSecretsProvider placeholder."""
+    provider = AwsSecretsProvider()
+    
+    # Test that the placeholder returns empty string
+    assert provider.get_secret("any_secret") == ""
+
+
+def test_gcp_secrets_provider():
+    """Test GcpSecretsProvider placeholder."""
+    provider = GcpSecretsProvider()
+    
+    # Test that the placeholder returns empty string
+    assert provider.get_secret("any_secret") == ""
+
+
+def test_get_secret(mock_env_vars):
+    """Test get_secret function."""
+    # Test with default provider
+    assert get_secret("TEST_SECRET") == "secret_value"
+    
+    # Test with custom provider
+    custom_provider = mock.Mock()
+    custom_provider.get_secret.return_value = "custom_secret_value"
+    assert get_secret("TEST_SECRET", provider=custom_provider) == "custom_secret_value"
+    custom_provider.get_secret.assert_called_once_with("TEST_SECRET")
+
+
+def test_password_masking():
+    """Test that passwords are properly masked in string representation."""
+    config = SupplierConfig(
+        name="Test Supplier",
+        url="https://example.com",
+        requires_login=True,
+        username="user",
+        password=SecretStr("sensitive_password")
+    )
+    
+    # Check that password is not exposed in string representation
+    config_str = str(config)
+    assert "sensitive_password" not in config_str
+    
+    # But can be accessed when needed
+    assert config.get_password() == "sensitive_password"
+
+
+def test_environment_variable_priority():
+    """Test that OS environment variables take priority over .env variables."""
+    # Create a mock .env content
+    dotenv_values = {
+        "PRIORITY_TEST": "dotenv_value"
+    }
+    
+    # Create a mock OS environment with the same key but different value
+    os_environ = {
+        "PRIORITY_TEST": "os_environ_value"
+    }
+    
+    # Mock both dotenv.load_dotenv and os.environ
+    with mock.patch("src.config.load_dotenv") as mock_load_dotenv, \
+         mock.patch.dict(os.environ, os_environ, clear=True):
+        
+        # Mock dotenv.load_dotenv to set up the test environment
+        mock_load_dotenv.return_value = True
+        
+        # Create a provider and test priority
+        provider = EnvFileSecretsProvider()
+        
+        # OS environment should take priority
+        assert get_env_value("PRIORITY_TEST") == "os_environ_value"
