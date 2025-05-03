@@ -224,6 +224,79 @@ class TestDynamicScraper(unittest.TestCase):
         self.scraper.close()
         self.mock_browser_handler.close.assert_called_once()
 
+    def test_maps_to_products(self):
+        """Test the Maps_to_products method."""
+        # Configure the mock BrowserHandler
+        self.mock_browser_handler.wait_for_selector.return_value = True
+        self.mock_browser_handler.evaluate.return_value = False  # Next button is not disabled
+        
+        # Create a category map for testing
+        category_map = {
+            "Category 1": "/category/1",
+            "Category 2": "/category/2"
+        }
+        
+        # Mock the get_product_urls method to return different URLs for different categories
+        with patch.object(self.scraper, 'get_product_urls') as mock_get_urls:
+            mock_get_urls.side_effect = lambda url: [
+                f"{url}/product/1",
+                f"{url}/product/2"
+            ] if url == "https://example.com/category/1" else [
+                f"{url}/product/3",
+                f"{url}/product/4"
+            ]
+            
+            # Call the Maps_to_products method
+            result = self.scraper.Maps_to_products(category_map)
+            
+            # Verify that get_product_urls was called for each category
+            self.assertEqual(mock_get_urls.call_count, 2)
+            
+            # Verify the results
+            self.assertEqual(len(result), 2)
+            self.assertEqual(len(result["Category 1"]), 2)
+            self.assertEqual(len(result["Category 2"]), 2)
+            expected_urls_category1 = [
+                "https://example.com/category/1/product/1",
+                "https://example.com/category/1/product/2"
+            ]
+            expected_urls_category2 = [
+                "https://example.com/category/2/product/3",
+                "https://example.com/category/2/product/4"
+            ]
+            for url in expected_urls_category1:
+                self.assertIn(url, result["Category 1"])
+            for url in expected_urls_category2:
+                self.assertIn(url, result["Category 2"])
+
+    def test_maps_to_products_error_handling(self):
+        """Test error handling in the Maps_to_products method."""
+        # Create a category map for testing
+        category_map = {
+            "Category 1": "/category/1",
+            "Category 2": "/category/2"
+        }
+        
+        # Mock the get_product_urls method to raise an exception
+        with patch.object(self.scraper, 'get_product_urls') as mock_get_urls:
+            mock_get_urls.side_effect = Exception("Test error")
+            
+            # Call the Maps_to_products method
+            result = self.scraper.Maps_to_products(category_map)
+            
+            # Verify that the method handled the error and returned empty lists
+            self.assertEqual(len(result), 2)
+            self.assertEqual(result["Category 1"], [])
+            self.assertEqual(result["Category 2"], [])
+
+    def test_context_manager(self):
+        """Test the context manager functionality."""
+        with self.scraper as scraper:
+            self.assertEqual(scraper, self.scraper)
+        
+        # Verify that close was called when exiting the context
+        self.mock_browser_handler.close.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,6 +28,10 @@ This document captures general learnings and best practices derived from challen
 
 8. **Test Edge Cases**: Always include tests for edge cases and error conditions, not just the happy path. This helps identify issues with error handling and ensures robust behavior.
 
+9. **Test Compatibility**: When modifying existing code, understand how it's being tested and ensure changes maintain compatibility with existing tests. Either update the tests to match the new implementation or modify the implementation to maintain compatibility.
+
+10. **URL Handling in Tests**: When mocking methods that handle URLs, be careful about URL concatenation to avoid creating malformed URLs. Pay attention to whether base URLs are already included in parameters.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -107,6 +111,16 @@ This document captures general learnings and best practices derived from challen
 4. **Resource Lifecycle Logging**: Log resource lifecycle events (creation, opening, closing) at appropriate levels to aid debugging.
 
 5. **Streaming Operations**: For large files or network operations, implement streaming processing (using iterators or generators) to minimize memory usage and improve efficiency.
+
+## Context Manager Implementation
+
+1. **Complete Context Manager Protocol**: When implementing classes that manage resources (like browser instances), always implement both `__enter__` and `__exit__` methods to support the `with` statement, in addition to explicit cleanup methods like `close()`.
+
+2. **Redundant Cleanup Mechanisms**: Provide multiple cleanup mechanisms (e.g., `close()`, `__exit__()`, and `__del__()`) to ensure resources are properly cleaned up in different usage scenarios.
+
+3. **Error Handling in Context Managers**: Ensure that the `__exit__` method handles exceptions properly and performs cleanup even when errors occur.
+
+4. **Resource Lifecycle Documentation**: Clearly document the resource lifecycle and cleanup methods to guide users on proper resource management.
 
 ## System Dependencies and Integration
 
@@ -200,9 +214,9 @@ This document captures general learnings and best practices derived from challen
 
 3. **Incremental Development**: When adding to existing abstract classes, carefully review the current implementation to ensure new additions are consistent with the existing design patterns and naming conventions.
 
-4. **Consistent Method Naming**: Maintain consistent method naming conventions in abstract classes, even if it means adapting to existing patterns that might not match your initial design.
+4. **Interface Consistency**: When implementing multiple concrete classes that inherit from the same abstract base class, ensure consistent method signatures and behavior across all implementations to maintain interchangeability.
 
-5. **Test Concrete Implementations**: When testing abstract classes, create simple concrete implementations in tests that implement all abstract methods, even if they return minimal values.
+5. **Abstract Method Verification**: Always verify that concrete implementations of abstract classes implement all required abstract methods, especially after the abstract base class is modified to add new abstract methods.
 
 6. **Concrete Implementation Verification**: When implementing a concrete class that inherits from an abstract base class, verify that it implements all required abstract methods, especially after changes to the abstract base class.
 

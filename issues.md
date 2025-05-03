@@ -16,6 +16,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 10: CSV Writer Module](docs/issues/story10_issues.md)
 - [Story 12: Implement BaseScraper Abstract Class](docs/issues/story12_issues.md)
 - [Story 13: Implement StaticScraper Concrete Class](docs/issues/story13_issues.md)
+- [Story 14: Implement DynamicScraper Concrete Class](docs/issues/story14_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -58,6 +59,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Configuration Management](docs/issues/story4_issues.md#issue-5-configuration-management)
 - [Story 4: Integration Testing with Real Browsers](docs/issues/story4_issues.md#issue-7-integration-testing-with-real-browsers)
 - [Story 4: System Dependencies for Playwright](docs/issues/story4_issues.md#issue-8-system-dependencies-for-playwright)
+- [Story 14: Resource Management with Context Managers](docs/issues/story14_issues.md#issue-2-resource-management-with-context-managers)
 
 #### Data Handling Issues
 - [Story 5: Error Handling in HTML Parser](docs/issues/story5_issues.md#issue-2-error-handling-in-html-parser)
@@ -70,18 +72,21 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 9: Currency Code Handling in Price Normalization](docs/issues/story9_issues.md#issue-1-currency-code-handling-in-price-normalization)
 - [Story 9: URL Validation Regex Pattern](docs/issues/story9_issues.md#issue-2-url-validation-regex-pattern)
 - [Story 10: UTF-8 Encoding for International Characters](docs/issues/story10_issues.md#issue-3-utf-8-encoding-for-international-characters)
+- [Story 14: Data Processing in extract_data Method](docs/issues/story14_issues.md#issue-3-data-processing-in-extract_data-method)
 
 #### Integration and Reuse
 - [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
 - [Story 9: Error Preservation in Validation Pipeline](docs/issues/story9_issues.md#issue-4-error-preservation-in-validation-pipeline)
-
-#### Validation and Type Handling
-- [Story 9: Type Handling in Pydantic Model](docs/issues/story9_issues.md#issue-3-type-handling-in-pydantic-model)
-- [Story 9: None Value Handling in Validation Functions](docs/issues/story9_issues.md#issue-5-none-value-handling-in-validation-functions)
+- [Story 14: Missing Abstract Method Implementation](docs/issues/story14_issues.md#issue-1-missing-maps_to_products-method)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
 - [Story 10: Resource Management with Context Managers](docs/issues/story10_issues.md#issue-2-resource-management-with-context-managers)
+- [Story 14: Resource Management with Context Managers](docs/issues/story14_issues.md#issue-2-resource-management-with-context-managers)
+
+#### Validation and Type Handling
+- [Story 9: Type Handling in Pydantic Model](docs/issues/story9_issues.md#issue-3-type-handling-in-pydantic-model)
+- [Story 9: None Value Handling in Validation Functions](docs/issues/story9_issues.md#issue-5-none-value-handling-in-validation-functions)
 
 ## Summary of Key Learnings
 
