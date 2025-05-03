@@ -26,6 +26,8 @@ This document captures general learnings and best practices derived from challen
 
 7. **Test Resource Cleanup**: Use specialized tools like `shutil.rmtree()` for cleaning up complex resources like directory trees in tests. Consider using `try/finally` or context managers to ensure cleanup happens even if tests fail.
 
+8. **Test Edge Cases**: Always include tests for edge cases and error conditions, not just the happy path. This helps identify issues with error handling and ensures robust behavior.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -37,6 +39,8 @@ This document captures general learnings and best practices derived from challen
 4. **Default Values**: Always provide sensible default values for functions that might encounter errors or missing data.
 
 5. **File Operation Safety**: Always check for file existence, handle permissions issues, and use proper error handling for all file operations. Consider using context managers to ensure resources are properly closed.
+
+6. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline and included in the final output. This helps with debugging and provides better feedback to users.
 
 ## Configuration and Validation
 
@@ -63,6 +67,10 @@ This document captures general learnings and best practices derived from challen
 6. **URL Handling**: Always convert relative URLs to absolute URLs when they will be used outside the context of the original website. This makes the data directly usable without additional processing.
 
 7. **Consistent Data Formats**: Ensure consistent data formats across different implementations of similar functionality to simplify downstream processing.
+
+8. **Multiple Selector Support**: When implementing HTML parsing, consider supporting multiple selector types (CSS, XPath) to provide flexibility for different use cases. Use specialized libraries for each selector type rather than relying on limited built-in support.
+
+9. **Type-Aware Processing**: Design functions to handle different input types explicitly rather than relying on duck typing for critical parsing operations. Document expected input types clearly.
 
 ## Resource Management
 
@@ -123,3 +131,11 @@ This document captures general learnings and best practices derived from challen
 4. **Streaming Writes**: For large datasets, use streaming writes (writing one row at a time) rather than building the entire dataset in memory before writing.
 
 5. **Timestamped Filenames**: Consider using timestamps in filenames for output files to avoid overwriting previous results and provide an audit trail.
+
+## Library Selection and Integration
+
+1. **Specialized Libraries**: Use specialized libraries for specific tasks rather than relying on general-purpose libraries with limited support. For example, use lxml for XPath parsing rather than BeautifulSoup's limited XPath support.
+
+2. **Consistent Interfaces**: When integrating multiple libraries for similar tasks (like CSS and XPath selectors), create consistent interfaces and error handling to simplify usage.
+
+3. **Reuse Existing Code**: Leverage existing functionality from other modules when extending capabilities to avoid duplication and ensure consistent behavior.

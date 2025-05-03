@@ -11,6 +11,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 5: HTML Parsing & Data Transformation Module](docs/issues/story5_issues.md)
 - [Story 6: CSV Output Storage Module](docs/issues/story6_issues.md)
 - [Story 7: Basic Image Handling (URL Extraction)](docs/issues/story7_issues.md)
+- [Story 8: Data Parser Module](docs/issues/story8_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -34,6 +35,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Testing Browser Automation Code](docs/issues/story4_issues.md#issue-4-testing-browser-automation-code)
 - [Story 5: Test Design for Floating-Point Comparisons](docs/issues/story5_issues.md#issue-4-test-design-for-floating-point-comparisons)
 - [Story 6: Directory Cleanup in Tests](docs/issues/story6_issues.md#issue-1-directory-cleanup-in-tests)
+- [Story 8: Testing Edge Cases and Error Conditions](docs/issues/story8_issues.md#issue-2-error-information-preservation)
 
 #### Library-Specific Issues
 - [Story 1: Pydantic Validation in Tests](docs/issues/story1_issues.md#issue-3-pydantic-validation-in-tests)
@@ -42,6 +44,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: URL Query Parameter Handling in Pagination](docs/issues/story3_issues.md#issue-3-url-query-parameter-handling-in-pagination)
 - [Story 4: Playwright API Stability](docs/issues/story4_issues.md#issue-6-playwright-api-stability)
 - [Story 5: Number Format Handling in Transformer Module](docs/issues/story5_issues.md#issue-1-number-format-handling-in-transformer-module)
+- [Story 8: XPath Selector Support](docs/issues/story8_issues.md#issue-1-xpath-selector-support)
 
 #### Browser Automation Issues
 - [Story 4: Browser Lifecycle Management](docs/issues/story4_issues.md#issue-1-browser-lifecycle-management)
@@ -57,6 +60,11 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 6: UTF-8 Encoding for International Characters](docs/issues/story6_issues.md#issue-3-utf-8-encoding-for-international-characters)
 - [Story 7: Relative vs. Absolute Image URLs](docs/issues/story7_issues.md#issue-1-relative-vs-absolute-image-urls)
 - [Story 7: Consistent URL Handling Across Scraper Types](docs/issues/story7_issues.md#issue-2-consistent-url-handling-across-scraper-types)
+- [Story 8: HTML Content Processing](docs/issues/story8_issues.md#issue-3-html-content-processing)
+- [Story 8: URL Handling for Image URLs](docs/issues/story8_issues.md#issue-5-url-handling-for-image-urls)
+
+#### Integration and Reuse
+- [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
@@ -82,5 +90,9 @@ This document serves as an index to the reorganized issue documentation for the 
 9. **Internationalization**: Consider different regional formats when handling numeric and date data.
 
 10. **Resource Management**: Use context managers for proper resource cleanup, especially for file operations.
+
+11. **Specialized Libraries**: Use specialized libraries for specific tasks rather than relying on general-purpose libraries with limited support.
+
+12. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline for better debugging.
 
 For more detailed learnings, see the [General Learnings](docs/issues/general_learnings.md) document.
