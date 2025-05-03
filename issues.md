@@ -9,6 +9,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: Static HTTP Scraper Implementation](docs/issues/story3_issues.md)
 - [Story 4: Dynamic Browser Scraper Implementation](docs/issues/story4_issues.md)
 - [Story 5: HTML Parsing & Data Transformation Module](docs/issues/story5_issues.md)
+- [Story 6: CSV Output Storage Module](docs/issues/story6_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -20,6 +21,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 1: Path Resolution for Output Directory](docs/issues/story1_issues.md#issue-1-path-resolution-for-output-directory)
 - [Story 2: Import Path Resolution in Factory](docs/issues/story2_issues.md#issue-3-import-path-resolution-in-factory)
 - [Story 2: Circular Import in Tests](docs/issues/story2_issues.md#issue-4-circular-import-in-tests)
+- [Story 6: Path Resolution for Output Directory](docs/issues/story6_issues.md#issue-2-path-resolution-for-output-directory)
 
 #### Testing Challenges
 - [Story 1: Testing Module Execution](docs/issues/story1_issues.md#issue-4-testing-module-execution)
@@ -30,6 +32,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: Test Flexibility for Parameter Order](docs/issues/story3_issues.md#issue-5-test-flexibility-for-parameter-order)
 - [Story 4: Testing Browser Automation Code](docs/issues/story4_issues.md#issue-4-testing-browser-automation-code)
 - [Story 5: Test Design for Floating-Point Comparisons](docs/issues/story5_issues.md#issue-4-test-design-for-floating-point-comparisons)
+- [Story 6: Directory Cleanup in Tests](docs/issues/story6_issues.md#issue-1-directory-cleanup-in-tests)
 
 #### Library-Specific Issues
 - [Story 1: Pydantic Validation in Tests](docs/issues/story1_issues.md#issue-3-pydantic-validation-in-tests)
@@ -50,6 +53,10 @@ This document serves as an index to the reorganized issue documentation for the 
 #### Data Handling Issues
 - [Story 5: Error Handling in HTML Parser](docs/issues/story5_issues.md#issue-2-error-handling-in-html-parser)
 - [Story 5: Integration with Existing Scrapers](docs/issues/story5_issues.md#issue-3-integration-with-existing-scrapers)
+- [Story 6: UTF-8 Encoding for International Characters](docs/issues/story6_issues.md#issue-3-utf-8-encoding-for-international-characters)
+
+#### Resource Management
+- [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
 
 ## Summary of Key Learnings
 
@@ -70,5 +77,7 @@ This document serves as an index to the reorganized issue documentation for the 
 8. **Data Validation**: Validate data as close to the extraction point as possible to ensure data quality.
 
 9. **Internationalization**: Consider different regional formats when handling numeric and date data.
+
+10. **Resource Management**: Use context managers for proper resource cleanup, especially for file operations.
 
 For more detailed learnings, see the [General Learnings](docs/issues/general_learnings.md) document.

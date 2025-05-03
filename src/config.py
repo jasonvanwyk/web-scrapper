@@ -35,6 +35,18 @@ class OutputConfig(BaseModel):
         default_factory=lambda: os.getenv("CSV_FILENAME", "product_data.csv"),
         description="Name of the CSV output file"
     )
+    csv_filename_pattern: str = Field(
+        default_factory=lambda: os.getenv("CSV_FILENAME_PATTERN", "{supplier}_{timestamp}.csv"),
+        description="Pattern for CSV filename with placeholders for supplier and timestamp"
+    )
+    include_timestamp: bool = Field(
+        default_factory=lambda: os.getenv("INCLUDE_TIMESTAMP", "True").lower() in ("true", "1", "t"),
+        description="Whether to include timestamp in CSV filenames"
+    )
+    csv_encoding: str = Field(
+        default_factory=lambda: os.getenv("CSV_ENCODING", "utf-8"),
+        description="Encoding to use for CSV files"
+    )
     download_images: bool = Field(
         default_factory=lambda: os.getenv("DOWNLOAD_IMAGES", "False").lower() in ("true", "1", "t"),
         description="Whether to download images or just store URLs"
@@ -130,22 +142,29 @@ def load_config() -> AppConfig:
     Returns:
         AppConfig: Validated application configuration
     """
-    # For now, we'll create a placeholder supplier configuration
-    # In a real implementation, this would be loaded from a configuration file
-    # or a database
+    # Create supplier configurations
     suppliers = []
     
-    # Example supplier (commented out for now)
-    # if os.getenv("SUPPLIER_URL"):
-    #     suppliers.append(
-    #         SupplierConfig(
-    #             name="Example Supplier",
-    #             url=os.getenv("SUPPLIER_URL"),
-    #             requires_login=bool(os.getenv("SUPPLIER_USERNAME")),
-    #             username=os.getenv("SUPPLIER_USERNAME"),
-    #             password=os.getenv("SUPPLIER_PASSWORD"),
-    #         )
-    #     )
+    # Add Isivunu Naturals supplier
+    suppliers.append(
+        SupplierConfig(
+            name="Isivunu Naturals",
+            url="https://www.isivunonaturals.com/",
+            scraper_type="static",  # Using static scraper since the site doesn't require JavaScript rendering
+            requires_login=False,
+            selectors={
+                # CSS selectors for product extraction
+                "product_list": ".grid__item",
+                "product_name": "h3",
+                "product_price": ".price",
+                "product_description": ".rte",
+                "product_image": "img.grid-view-item__image",
+                "product_link": "a.grid-view-item__link",
+                "product_sku": ".product-single__sku",
+                "collection_links": ".grid-link__container a"
+            }
+        )
+    )
     
     return AppConfig(
         logging=LoggingConfig(),

@@ -9,15 +9,18 @@ import logging
 import sys
 import os
 from pathlib import Path
+from typing import Dict, Any, List
 
 # Fix the import to work when running from src directory
 try:
     from src.config import config
     from src.scrapers.factory import get_scraper
+    from src.storage.csv_writer import CSVWriter
 except ModuleNotFoundError:
     # When running directly from src directory
     from config import config
     from scrapers.factory import get_scraper
+    from storage.csv_writer import CSVWriter
 
 
 def setup_logging() -> None:
@@ -50,6 +53,23 @@ def setup_logging() -> None:
     logger.info(f"Logging initialized at level: {config.logging.level}")
 
 
+def resolve_path(path: Path) -> Path:
+    """
+    Resolve a path to be absolute, handling both absolute and relative paths.
+    
+    Args:
+        path: The path to resolve
+        
+    Returns:
+        Path: The resolved absolute path
+    """
+    if not path.is_absolute():
+        # If path is relative, make it relative to the project root, not the src directory
+        project_root = Path(__file__).parent.parent
+        return project_root / path
+    return path
+
+
 def main() -> None:
     """
     Main function that orchestrates the scraping process.
@@ -59,11 +79,7 @@ def main() -> None:
     logger.info("Starting Automated Product Data Scraper")
     
     # Resolve output directory path
-    output_dir = Path(config.output.output_dir)
-    if not output_dir.is_absolute():
-        # If path is relative, make it relative to the project root, not the src directory
-        project_root = Path(__file__).parent.parent
-        output_dir = project_root / output_dir
+    output_dir = resolve_path(Path(config.output.output_dir))
     
     logger.info(f"Output directory: {output_dir}")
     logger.info(f"Download images: {config.output.download_images}")
@@ -73,6 +89,18 @@ def main() -> None:
         return
     
     logger.info(f"Found {len(config.suppliers)} supplier(s) to process")
+    
+    # Define the CSV headers for product data
+    csv_headers = [
+        "product_name", 
+        "sku", 
+        "description", 
+        "supplier_name", 
+        "cost", 
+        "price", 
+        "colorways", 
+        "image_url"
+    ]
     
     # Process each supplier using the ScraperFactory
     for supplier in config.suppliers:
@@ -91,9 +119,55 @@ def main() -> None:
                     continue
                 logger.info(f"Login successful for supplier: {supplier.name}")
             
-            # In future stories, we'll implement the actual scraping logic here
-            # For now, just log that we would process the supplier
-            logger.info(f"Would process supplier: {supplier.name} with scraper: {scraper.__class__.__name__}")
+            # Initialize the CSV writer for this supplier
+            csv_writer = CSVWriter(
+                output_path=str(output_dir),
+                filename_pattern=config.output.csv_filename_pattern,
+                supplier_name=supplier.name,
+                include_timestamp=config.output.include_timestamp,
+                encoding=config.output.csv_encoding
+            )
+            
+            # Open the CSV file and write the header
+            with csv_writer:
+                csv_writer.write_header(csv_headers)
+                
+                # Get product URLs (this will be implemented in future stories)
+                # For now, we'll use a placeholder
+                logger.info(f"Getting product URLs for supplier: {supplier.name}")
+                product_urls = []  # This would be populated by scraper.get_product_urls()
+                
+                # For demonstration purposes, add a placeholder product URL
+                product_urls.append("https://example.com/product1")
+                
+                logger.info(f"Found {len(product_urls)} product URLs")
+                
+                # Process each product URL
+                for url in product_urls:
+                    try:
+                        logger.info(f"Processing product URL: {url}")
+                        
+                        # Extract product data (this will be implemented in future stories)
+                        # For now, we'll use placeholder data
+                        product_data = {
+                            "product_name": f"Product from {supplier.name}",
+                            "sku": "SKU123",
+                            "description": "This is a placeholder product description",
+                            "supplier_name": supplier.name,
+                            "cost": "99.99",
+                            "price": "149.99",
+                            "colorways": "Red, Blue, Green",
+                            "image_url": "https://example.com/image.jpg"
+                        }
+                        
+                        # Write the product data to the CSV file
+                        csv_writer.write_row(product_data)
+                        logger.info(f"Wrote product data for: {product_data['product_name']}")
+                        
+                    except Exception as e:
+                        logger.error(f"Error processing product URL {url}: {e}", exc_info=True)
+                
+                logger.info(f"Completed processing supplier: {supplier.name}")
             
         except ImportError as e:
             logger.error(f"Failed to load scraper for supplier {supplier.name}: {e}")

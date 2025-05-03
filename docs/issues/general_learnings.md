@@ -24,6 +24,8 @@ This document captures general learnings and best practices derived from challen
 
 6. **Floating-Point Comparisons**: Never use exact equality for floating-point comparisons in tests. Use approximate equality checks with a small tolerance or specialized tools like `pytest.approx()`.
 
+7. **Test Resource Cleanup**: Use specialized tools like `shutil.rmtree()` for cleaning up complex resources like directory trees in tests. Consider using `try/finally` or context managers to ensure cleanup happens even if tests fail.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -34,6 +36,8 @@ This document captures general learnings and best practices derived from challen
 
 4. **Default Values**: Always provide sensible default values for functions that might encounter errors or missing data.
 
+5. **File Operation Safety**: Always check for file existence, handle permissions issues, and use proper error handling for all file operations. Consider using context managers to ensure resources are properly closed.
+
 ## Configuration and Validation
 
 1. **Configuration Management**: Using Pydantic for configuration validation provides strong type checking and validation, but requires understanding its validation mechanisms.
@@ -41,6 +45,8 @@ This document captures general learnings and best practices derived from challen
 2. **Library Version Awareness**: Stay aware of major version changes in dependencies (like Pydantic v1 to v2) and plan for migration to avoid deprecated features.
 
 3. **Data Validation**: Validate data as close to the extraction point as possible to ensure data quality. Implement validation functions for common data types and formats.
+
+4. **Configuration Flexibility**: Make configuration options flexible enough to handle different use cases, but with sensible defaults to simplify common scenarios.
 
 ## Data Processing and Transformation
 
@@ -51,6 +57,18 @@ This document captures general learnings and best practices derived from challen
 3. **Consistent Error Handling**: Use consistent error handling patterns across all data processing functions to ensure reliability.
 
 4. **Logging Context**: Include sufficient context in log messages to make debugging easier, especially for data extraction and transformation errors.
+
+5. **Character Encoding**: Always specify encoding explicitly (preferably UTF-8) when dealing with text files, especially for international data.
+
+## Resource Management
+
+1. **Context Managers**: Implement and use context managers (`__enter__` and `__exit__` methods) for classes that manage resources like file handles, network connections, or database sessions.
+
+2. **Explicit Cleanup**: Provide explicit cleanup methods (like `close()`) in addition to context manager support to give users flexibility in resource management.
+
+3. **Defensive Cleanup**: Implement cleanup operations defensively, checking if resources are still open before attempting to close them and handling exceptions during cleanup.
+
+4. **Resource Lifecycle Logging**: Log resource lifecycle events (creation, opening, closing) at appropriate levels to aid debugging.
 
 ## System Dependencies and Integration
 
@@ -89,3 +107,15 @@ This document captures general learnings and best practices derived from challen
 3. **Backward Compatibility**: Keep backward compatibility in mind when improving existing components.
 
 4. **Test Coverage**: Ensure comprehensive test coverage before and after refactoring to catch regressions.
+
+## File Operations
+
+1. **Path Abstraction**: Use `pathlib.Path` for modern, object-oriented path manipulation instead of string operations or `os.path` functions.
+
+2. **Directory Creation**: Use `os.makedirs(exist_ok=True)` to create directories, which handles both creating parent directories and avoiding errors if the directory already exists.
+
+3. **File Encoding**: Always specify encoding (typically UTF-8) when opening text files to ensure consistent behavior across different operating systems and locales.
+
+4. **Streaming Writes**: For large datasets, use streaming writes (writing one row at a time) rather than building the entire dataset in memory before writing.
+
+5. **Timestamped Filenames**: Consider using timestamps in filenames for output files to avoid overwriting previous results and provide an audit trail.
