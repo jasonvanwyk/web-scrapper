@@ -358,6 +358,76 @@ class TestStaticScraper(unittest.TestCase):
         self.scraper.selectors["image_url"] = "invalid_selector"
         result = self.scraper._extract_image_url(soup)
         self.assertEqual(result, "")
+    
+    def test_maps_to_products(self):
+        """Test the Maps_to_products method."""
+        # Create a mock for the get_product_urls method
+        with mock.patch.object(self.scraper, 'get_product_urls') as mock_get_product_urls:
+            # Set up the mock to return different product URLs for different categories
+            mock_get_product_urls.side_effect = lambda url: {
+                "https://example.com/category/shoes": [
+                    "https://example.com/product/shoe1",
+                    "https://example.com/product/shoe2"
+                ],
+                "https://example.com/category/shirts": [
+                    "https://example.com/product/shirt1",
+                    "https://example.com/product/shirt2",
+                    "https://example.com/product/shirt3"
+                ]
+            }.get(url, [])
+            
+            # Create a category map
+            category_map = {
+                "Shoes": "/category/shoes",
+                "Shirts": "/category/shirts"
+            }
+            
+            # Call the Maps_to_products method
+            result = self.scraper.Maps_to_products(category_map)
+            
+            # Check that the result contains the expected data
+            expected_result = {
+                "Shoes": [
+                    "https://example.com/product/shoe1",
+                    "https://example.com/product/shoe2"
+                ],
+                "Shirts": [
+                    "https://example.com/product/shirt1",
+                    "https://example.com/product/shirt2",
+                    "https://example.com/product/shirt3"
+                ]
+            }
+            self.assertEqual(result, expected_result)
+            
+            # Check that get_product_urls was called with the correct URLs
+            mock_get_product_urls.assert_any_call("https://example.com/category/shoes")
+            mock_get_product_urls.assert_any_call("https://example.com/category/shirts")
+            self.assertEqual(mock_get_product_urls.call_count, 2)
+    
+    def test_maps_to_products_error_handling(self):
+        """Test the Maps_to_products method with error handling."""
+        # Create a mock for the get_product_urls method that raises an exception
+        with mock.patch.object(self.scraper, 'get_product_urls') as mock_get_product_urls:
+            mock_get_product_urls.side_effect = Exception("Test exception")
+            
+            # Create a category map
+            category_map = {
+                "Shoes": "/category/shoes",
+                "Shirts": "/category/shirts"
+            }
+            
+            # Call the Maps_to_products method
+            result = self.scraper.Maps_to_products(category_map)
+            
+            # Check that the result contains empty lists for all categories
+            expected_result = {
+                "Shoes": [],
+                "Shirts": []
+            }
+            self.assertEqual(result, expected_result)
+            
+            # Check that get_product_urls was called
+            mock_get_product_urls.assert_called_once()
 
 
 if __name__ == "__main__":

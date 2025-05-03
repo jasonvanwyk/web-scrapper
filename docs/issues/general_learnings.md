@@ -203,3 +203,7 @@ This document captures general learnings and best practices derived from challen
 4. **Consistent Method Naming**: Maintain consistent method naming conventions in abstract classes, even if it means adapting to existing patterns that might not match your initial design.
 
 5. **Test Concrete Implementations**: When testing abstract classes, create simple concrete implementations in tests that implement all abstract methods, even if they return minimal values.
+
+6. **Concrete Implementation Verification**: When implementing a concrete class that inherits from an abstract base class, verify that it implements all required abstract methods, especially after changes to the abstract base class.
+
+7. **Existing Implementation Check**: Before implementing a new class, check if parts of it already exist in the codebase. Add only what is missing rather than creating duplicate implementations that might conflict with existing code.
