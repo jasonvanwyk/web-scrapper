@@ -22,6 +22,8 @@ This document captures general learnings and best practices derived from challen
 
 5. **Test Multiple Calls**: Use `assert_any_call` instead of `assert_called_with` when testing methods that make multiple calls to the same dependency.
 
+6. **Floating-Point Comparisons**: Never use exact equality for floating-point comparisons in tests. Use approximate equality checks with a small tolerance or specialized tools like `pytest.approx()`.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -30,11 +32,25 @@ This document captures general learnings and best practices derived from challen
 
 3. **Graceful Degradation**: Design components to handle failures gracefully, providing meaningful error messages and fallback behavior when possible.
 
+4. **Default Values**: Always provide sensible default values for functions that might encounter errors or missing data.
+
 ## Configuration and Validation
 
 1. **Configuration Management**: Using Pydantic for configuration validation provides strong type checking and validation, but requires understanding its validation mechanisms.
 
 2. **Library Version Awareness**: Stay aware of major version changes in dependencies (like Pydantic v1 to v2) and plan for migration to avoid deprecated features.
+
+3. **Data Validation**: Validate data as close to the extraction point as possible to ensure data quality. Implement validation functions for common data types and formats.
+
+## Data Processing and Transformation
+
+1. **Internationalization**: Consider different regional formats when handling numeric and date data. Implement robust parsing for different number formats (e.g., US vs. European).
+
+2. **Separation of Concerns**: Separate parsing logic from data transformation to improve maintainability and testability.
+
+3. **Consistent Error Handling**: Use consistent error handling patterns across all data processing functions to ensure reliability.
+
+4. **Logging Context**: Include sufficient context in log messages to make debugging easier, especially for data extraction and transformation errors.
 
 ## System Dependencies and Integration
 
@@ -63,3 +79,13 @@ This document captures general learnings and best practices derived from challen
 2. **Consistent Coding Style**: Follow a consistent coding style throughout the project to improve readability and maintainability.
 
 3. **Documentation**: Document code, especially complex logic, to make it easier for other developers (and your future self) to understand.
+
+## Refactoring and Code Evolution
+
+1. **Interface Stability**: When refactoring, maintain the same interface to minimize disruption to existing code.
+
+2. **Phased Approach**: Consider a phased approach to refactoring rather than changing everything at once.
+
+3. **Backward Compatibility**: Keep backward compatibility in mind when improving existing components.
+
+4. **Test Coverage**: Ensure comprehensive test coverage before and after refactoring to catch regressions.

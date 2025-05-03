@@ -8,6 +8,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 2: Abstract Base Scraper & Factory](docs/issues/story2_issues.md)
 - [Story 3: Static HTTP Scraper Implementation](docs/issues/story3_issues.md)
 - [Story 4: Dynamic Browser Scraper Implementation](docs/issues/story4_issues.md)
+- [Story 5: HTML Parsing & Data Transformation Module](docs/issues/story5_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -28,6 +29,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: Test Assertion Order Dependency](docs/issues/story3_issues.md#issue-4-test-assertion-order-dependency)
 - [Story 3: Test Flexibility for Parameter Order](docs/issues/story3_issues.md#issue-5-test-flexibility-for-parameter-order)
 - [Story 4: Testing Browser Automation Code](docs/issues/story4_issues.md#issue-4-testing-browser-automation-code)
+- [Story 5: Test Design for Floating-Point Comparisons](docs/issues/story5_issues.md#issue-4-test-design-for-floating-point-comparisons)
 
 #### Library-Specific Issues
 - [Story 1: Pydantic Validation in Tests](docs/issues/story1_issues.md#issue-3-pydantic-validation-in-tests)
@@ -35,6 +37,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 3: Tenacity Retry Decorator with Lambda Functions](docs/issues/story3_issues.md#issue-1-tenacity-retry-decorator-with-lambda-functions)
 - [Story 3: URL Query Parameter Handling in Pagination](docs/issues/story3_issues.md#issue-3-url-query-parameter-handling-in-pagination)
 - [Story 4: Playwright API Stability](docs/issues/story4_issues.md#issue-6-playwright-api-stability)
+- [Story 5: Number Format Handling in Transformer Module](docs/issues/story5_issues.md#issue-1-number-format-handling-in-transformer-module)
 
 #### Browser Automation Issues
 - [Story 4: Browser Lifecycle Management](docs/issues/story4_issues.md#issue-1-browser-lifecycle-management)
@@ -43,6 +46,10 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Configuration Management](docs/issues/story4_issues.md#issue-5-configuration-management)
 - [Story 4: Integration Testing with Real Browsers](docs/issues/story4_issues.md#issue-7-integration-testing-with-real-browsers)
 - [Story 4: System Dependencies for Playwright](docs/issues/story4_issues.md#issue-8-system-dependencies-for-playwright)
+
+#### Data Handling Issues
+- [Story 5: Error Handling in HTML Parser](docs/issues/story5_issues.md#issue-2-error-handling-in-html-parser)
+- [Story 5: Integration with Existing Scrapers](docs/issues/story5_issues.md#issue-3-integration-with-existing-scrapers)
 
 ## Summary of Key Learnings
 
@@ -59,5 +66,9 @@ This document serves as an index to the reorganized issue documentation for the 
 6. **Library Version Awareness**: Stay aware of major version changes in dependencies and plan for migration.
 
 7. **Pragmatic Mocking**: Use real implementations rather than excessive mocking when testing complex behaviors.
+
+8. **Data Validation**: Validate data as close to the extraction point as possible to ensure data quality.
+
+9. **Internationalization**: Consider different regional formats when handling numeric and date data.
 
 For more detailed learnings, see the [General Learnings](docs/issues/general_learnings.md) document.

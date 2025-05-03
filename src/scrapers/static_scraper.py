@@ -18,9 +18,13 @@ from bs4 import BeautifulSoup
 try:
     from src.scrapers.base_scraper import BaseScraper
     from src.http_client.request_handler import RequestHandler
+    from src.parser.html_parser import extract_text, extract_attribute, extract_image_url, extract_multiple_texts
+    from src.parser.transformer import strip_whitespace, to_float, normalize_list, clean_and_validate_product_data
 except ModuleNotFoundError:
     from scrapers.base_scraper import BaseScraper
     from http_client.request_handler import RequestHandler
+    from parser.html_parser import extract_text, extract_attribute, extract_image_url, extract_multiple_texts
+    from parser.transformer import strip_whitespace, to_float, normalize_list, clean_and_validate_product_data
 
 
 class StaticScraper(BaseScraper):
@@ -265,22 +269,27 @@ class StaticScraper(BaseScraper):
         try:
             # Fetch the product page
             response = self.request_handler.get(product_url)
-            soup = BeautifulSoup(response.text, 'lxml')
+            html_content = response.text
             
-            # Extract data using selectors
-            product_data = {
-                "product_name": self._extract_text(soup, 'product_name'),
-                "sku": self._extract_text(soup, 'sku'),
-                "description": self._extract_text(soup, 'description'),
+            # Extract data using selectors and our parser/transformer modules
+            raw_data = {
+                "product_name": extract_text(html_content, self.selectors.get('product_name', '')),
+                "sku": extract_text(html_content, self.selectors.get('sku', '')),
+                "description": extract_text(html_content, self.selectors.get('description', '')),
                 "supplier_name": self.name,
-                "cost": self._extract_price(soup, 'cost'),
-                "price": self._extract_price(soup, 'price'),
-                "colorways": self._extract_colorways(soup),
-                "image_url": self._extract_image_url(soup),
+                "cost": to_float(extract_text(html_content, self.selectors.get('cost', ''))),
+                "price": to_float(extract_text(html_content, self.selectors.get('price', ''))),
+                "colorways": normalize_list(extract_multiple_texts(html_content, self.selectors.get('colorways', ''))),
+                "image_url": extract_image_url(html_content, self.selectors.get('image_url', '')),
             }
             
-            self.logger.debug(f"Extracted data for product: {product_data['product_name']}")
-            return product_data
+            # Clean and validate the extracted data
+            processed_data = clean_and_validate_product_data(raw_data)
+            
+            self.logger.debug(f"Extracted data for product: {processed_data['data'].get('product_name', 'Unknown')}")
+            
+            # Return the cleaned data
+            return processed_data['data']
             
         except Exception as e:
             self.logger.error(f"Error extracting data from {product_url}: {e}")
