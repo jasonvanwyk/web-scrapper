@@ -36,6 +36,26 @@ This document captures general learnings and best practices derived from challen
 
 2. **Library Version Awareness**: Stay aware of major version changes in dependencies (like Pydantic v1 to v2) and plan for migration to avoid deprecated features.
 
+## System Dependencies and Integration
+
+1. **Beyond Package Dependencies**: For complex tools like browser automation, be aware of system-level dependencies that may be required beyond Python packages.
+
+2. **Dependency Installation Scripts**: Provide automation scripts for installing system dependencies to simplify setup across different environments.
+
+3. **Containerization Consideration**: For projects with complex dependencies, consider containerization (Docker) to ensure consistent environments across development, testing, and production.
+
+4. **Skippable Integration Tests**: Design integration tests to be skippable in environments where all dependencies cannot be installed, using environment variables to control test execution.
+
+## Browser Automation Best Practices
+
+1. **Resource Management**: Always ensure proper cleanup of browser resources, even in error scenarios, to prevent memory leaks and orphaned processes.
+
+2. **Stealth Techniques**: When scraping websites that may employ anti-bot measures, implement stealth techniques to minimize detection risk.
+
+3. **Configurable Timeouts and Delays**: Make timeouts and delays configurable to handle different network conditions and website response times.
+
+4. **Error Recovery**: Implement robust error handling with appropriate recovery mechanisms for common browser automation failures.
+
 ## Development Environment
 
 1. **Environment Setup**: Ensure virtual environments and dependencies are properly set up before running the application.

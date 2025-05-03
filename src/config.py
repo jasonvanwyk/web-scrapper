@@ -72,6 +72,26 @@ class ScrapingConfig(BaseModel):
         default_factory=lambda: os.getenv("RESPECT_ROBOTS_TXT", "True").lower() in ("true", "1", "t"),
         description="Whether to respect robots.txt"
     )
+    browser_timeout: int = Field(
+        default_factory=lambda: int(os.getenv("BROWSER_TIMEOUT", "30000")),
+        description="Timeout for browser operations in milliseconds"
+    )
+    browser_delay: float = Field(
+        default_factory=lambda: float(os.getenv("BROWSER_DELAY", "2.0")),
+        description="Delay between browser actions in seconds"
+    )
+    headless: bool = Field(
+        default_factory=lambda: os.getenv("HEADLESS", "True").lower() in ("true", "1", "t"),
+        description="Whether to run the browser in headless mode"
+    )
+    browser_type: str = Field(
+        default_factory=lambda: os.getenv("BROWSER_TYPE", "chromium"),
+        description="Type of browser to use (chromium, firefox, webkit)"
+    )
+    stealth_mode: bool = Field(
+        default_factory=lambda: os.getenv("STEALTH_MODE", "True").lower() in ("true", "1", "t"),
+        description="Whether to use stealth mode to minimize bot detection"
+    )
 
 
 class SupplierConfig(BaseModel):
