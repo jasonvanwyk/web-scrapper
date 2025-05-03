@@ -25,6 +25,7 @@ class TestBaseScraper:
         
         # Check that all required abstract methods are defined
         assert "login" in abstract_methods
+        assert "Maps_to_products" in abstract_methods
         assert "get_product_urls" in abstract_methods
         assert "handle_pagination" in abstract_methods
         assert "extract_data" in abstract_methods
@@ -40,6 +41,9 @@ class TestBaseScraper:
         class ConcreteScraper(BaseScraper):
             def login(self, username, password):
                 return True
+            
+            def Maps_to_products(self, category_map):
+                return {k: [] for k in category_map}
             
             def get_product_urls(self, category_url=None):
                 return []
@@ -72,6 +76,9 @@ class TestBaseScraper:
             def login(self, username, password):
                 return True
             
+            def Maps_to_products(self, category_map):
+                return {k: [] for k in category_map}
+            
             def get_product_urls(self, category_url=None):
                 return []
             
@@ -93,6 +100,9 @@ class TestBaseScraper:
         class ConcreteScraper(BaseScraper):
             def login(self, username, password):
                 return True
+            
+            def Maps_to_products(self, category_map):
+                return {k: [] for k in category_map}
             
             def get_product_urls(self, category_url=None):
                 return []

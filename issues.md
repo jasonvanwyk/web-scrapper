@@ -14,6 +14,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 8: Data Parser Module](docs/issues/story8_issues.md)
 - [Story 9: Data Sanitizer & Validator Module](docs/issues/story9_issues.md)
 - [Story 10: CSV Writer Module](docs/issues/story10_issues.md)
+- [Story 12: Implement BaseScraper Abstract Class](docs/issues/story12_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference

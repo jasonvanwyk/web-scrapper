@@ -54,6 +54,19 @@ class BaseScraper(abc.ABC):
         pass
     
     @abc.abstractmethod
+    def Maps_to_products(self, category_map: Dict[str, str]) -> Dict[str, List[str]]:
+        """
+        Map category identifiers to product URLs.
+        
+        Args:
+            category_map: A dictionary mapping category names to category URLs or identifiers.
+            
+        Returns:
+            Dict[str, List[str]]: A dictionary mapping category names to lists of product URLs.
+        """
+        pass
+    
+    @abc.abstractmethod
     def get_product_urls(self, category_url: Optional[str] = None) -> List[str]:
         """
         Get URLs for individual product pages.

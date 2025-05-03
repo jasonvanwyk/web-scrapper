@@ -191,3 +191,15 @@ This document captures general learnings and best practices derived from challen
 2. **Consistent Interfaces**: When integrating multiple libraries for similar tasks (like CSS and XPath selectors), create consistent interfaces and error handling to simplify usage.
 
 3. **Reuse Existing Code**: Leverage existing functionality from other modules when extending capabilities to avoid duplication and ensure consistent behavior.
+
+## Abstract Class Design and Implementation
+
+1. **Complete Interface Definition**: When designing abstract base classes, ensure all required methods are defined upfront to establish a complete contract for concrete implementations. This prevents having to update multiple implementations later.
+
+2. **Abstract Method Testing**: Use the `__abstractmethods__` class attribute to test abstract base classes rather than trying to inspect individual methods for the `__isabstractmethod__` attribute.
+
+3. **Incremental Development**: When adding to existing abstract classes, carefully review the current implementation to ensure new additions are consistent with the existing design patterns and naming conventions.
+
+4. **Consistent Method Naming**: Maintain consistent method naming conventions in abstract classes, even if it means adapting to existing patterns that might not match your initial design.
+
+5. **Test Concrete Implementations**: When testing abstract classes, create simple concrete implementations in tests that implement all abstract methods, even if they return minimal values.
