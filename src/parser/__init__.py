@@ -16,6 +16,9 @@ from .transformer import (
     clean_and_validate_product_data
 )
 from .parser import Parser
+from .parser_transformer import (
+    ParserTransformer, parse_html, parse_multiple_products, transform_data
+)
 
 __all__ = [
     'create_soup', 'extract_text', 'extract_attribute', 
@@ -24,5 +27,5 @@ __all__ = [
     'strip_whitespace', 'to_float', 'normalize_currency', 'normalize_text',
     'normalize_list', 'validate_sku_format', 'validate_required_field',
     'clean_and_validate_product_data',
-    'Parser'
+    'Parser', 'ParserTransformer', 'parse_html', 'parse_multiple_products', 'transform_data'
 ]

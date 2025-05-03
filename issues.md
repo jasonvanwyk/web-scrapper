@@ -19,6 +19,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 14: Implement DynamicScraper Concrete Class](docs/issues/story14_issues.md)
 - [Story 15: Implement RequestHandler Module](docs/issues/story15_issues.md)
 - [Story 16: Implement BrowserHandler Module](docs/issues/story16_issues.md)
+- [Story 17: Implement Parser & Transformer Module](docs/issues/story17_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -32,6 +33,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 2: Circular Import in Tests](docs/issues/story2_issues.md#issue-4-circular-import-in-tests)
 - [Story 6: Path Resolution for Output Directory](docs/issues/story6_issues.md#issue-2-path-resolution-for-output-directory)
 - [Story 10: Output Directory Creation](docs/issues/story10_issues.md#issue-1-output-directory-creation)
+- [Story 17: Import Path Resolution in Tests](docs/issues/story17_issues.md#issue-2-import-path-resolution-in-tests)
 
 #### Testing Challenges
 - [Story 1: Testing Module Execution](docs/issues/story1_issues.md#issue-4-testing-module-execution)
@@ -47,6 +49,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 6: Directory Cleanup in Tests](docs/issues/story6_issues.md#issue-1-directory-cleanup-in-tests)
 - [Story 8: Testing Edge Cases and Error Conditions](docs/issues/story8_issues.md#issue-2-error-information-preservation)
 - [Story 16: Testing Browser Automation Code](docs/issues/story16_issues.md#issue-4-testing-browser-automation-code)
+- [Story 17: Mocking Challenges with Nested Imports](docs/issues/story17_issues.md#issue-3-mocking-challenges-with-nested-imports)
 
 #### Library-Specific Issues
 - [Story 1: Pydantic Validation in Tests](docs/issues/story1_issues.md#issue-3-pydantic-validation-in-tests)
@@ -88,6 +91,8 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
 - [Story 9: Error Preservation in Validation Pipeline](docs/issues/story9_issues.md#issue-4-error-preservation-in-validation-pipeline)
 - [Story 14: Missing Abstract Method Implementation](docs/issues/story14_issues.md#issue-1-missing-maps_to_products-method)
+- [Story 17: Integration vs. Duplication](docs/issues/story17_issues.md#issue-1-integration-vs-duplication)
+- [Story 17: Maintaining Compatibility with Existing Code](docs/issues/story17_issues.md#issue-4-maintaining-compatibility-with-existing-code)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
@@ -124,5 +129,7 @@ This document serves as an index to the reorganized issue documentation for the 
 11. **Specialized Libraries**: Use specialized libraries for specific tasks rather than relying on general-purpose libraries with limited support.
 
 12. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline for better debugging.
+
+13. **Integration over Duplication**: When adding new functionality to a modular system, consider how to integrate with existing components before creating new ones.
 
 For more detailed learnings, see the [General Learnings](docs/issues/general_learnings.md) document.

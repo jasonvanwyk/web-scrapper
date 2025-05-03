@@ -178,6 +178,18 @@ This document captures general learnings and best practices derived from challen
 
 9. **Comprehensive Logging**: Include detailed logging for all browser operations to facilitate debugging of automation issues.
 
+## Module Integration and Composition
+
+1. **Integration over Duplication**: When adding new functionality to a modular system, consider how to integrate with existing components before creating new ones. This promotes code reuse and maintainability.
+
+2. **Unified Interfaces**: Create higher-level abstractions that combine related functionality into cohesive workflows. This simplifies usage for other parts of the application and reduces the need for complex orchestration code.
+
+3. **Compatibility Testing**: When adding new modules or integrating components, always run comprehensive tests on both new and existing functionality to ensure changes don't introduce regressions.
+
+4. **Consistent Design Patterns**: Follow established patterns and conventions in the existing codebase when creating new modules to maintain consistency and reduce integration risks.
+
+5. **Dynamic Import Path Handling**: In projects with multiple import contexts (e.g., running from project root vs. from a specific directory), design modules and tests to handle these differences gracefully.
+
 ## Development Environment
 
 1. **Environment Setup**: Ensure virtual environments and dependencies are properly set up before running the application.
