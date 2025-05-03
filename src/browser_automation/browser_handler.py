@@ -492,3 +492,93 @@ class BrowserHandler:
             exc_tb: Exception traceback.
         """
         self.close()
+    
+    def press(self, selector: str, key: str, timeout: Optional[int] = None) -> None:
+        """
+        Press a key on an element matching the selector.
+        
+        Args:
+            selector: A selector to search for.
+            key: Name of the key to press (e.g., 'Enter', 'Tab', 'ArrowDown').
+            timeout: Maximum time to wait in milliseconds.
+                    If None, uses the default timeout.
+        """
+        try:
+            self._add_delay()
+            self.page.press(selector, key, timeout=timeout or self.timeout)
+        except PlaywrightError as e:
+            self.logger.error(f"Error pressing key '{key}' on selector '{selector}': {e}")
+            raise
+    
+    def wait_for_function(self, expression: str, timeout: Optional[int] = None) -> Any:
+        """
+        Wait for a JavaScript function to return a truthy value.
+        
+        Args:
+            expression: JavaScript expression to evaluate.
+            timeout: Maximum time to wait in milliseconds.
+                    If None, uses the default timeout.
+                    
+        Returns:
+            The result of the expression.
+        """
+        try:
+            return self.page.wait_for_function(expression, timeout=timeout or self.timeout)
+        except PlaywrightError as e:
+            self.logger.error(f"Error waiting for function: {e}")
+            raise
+    
+    def handle_dialog(self, dialog_type: str = "accept", prompt_text: Optional[str] = None) -> None:
+        """
+        Set up handler for browser dialogs (alert, confirm, prompt).
+        
+        Args:
+            dialog_type: Action to take on dialog ('accept' or 'dismiss').
+            prompt_text: Text to enter for prompt dialogs.
+        """
+        def dialog_handler(dialog):
+            self.logger.info(f"Handling dialog: {dialog.message}")
+            if dialog_type == "accept":
+                if prompt_text is not None and dialog.type == "prompt":
+                    dialog.accept(prompt_text)
+                else:
+                    dialog.accept()
+            else:
+                dialog.dismiss()
+        
+        self.page.on("dialog", dialog_handler)
+        self.logger.debug(f"Dialog handler set up with action: {dialog_type}")
+    
+    def solve_captcha(self, captcha_type: str, selector: str) -> Optional[str]:
+        """
+        Attempt to solve a CAPTCHA on the page.
+        
+        This method provides an integration point for CAPTCHA solving services.
+        Actual implementation would depend on the specific CAPTCHA solving service used.
+        
+        Args:
+            captcha_type: Type of CAPTCHA ('recaptcha', 'hcaptcha', 'image', etc.).
+            selector: Selector for the CAPTCHA element.
+            
+        Returns:
+            Optional[str]: The solved CAPTCHA token or None if solving failed.
+        """
+        self.logger.warning("CAPTCHA solving requested but no solver is configured")
+        self.logger.info(f"CAPTCHA type: {captcha_type}, selector: {selector}")
+        
+        # This is a placeholder for CAPTCHA solving integration
+        # In a real implementation, this would integrate with a CAPTCHA solving service
+        
+        # Example implementation for a hypothetical CAPTCHA solving service:
+        # if hasattr(self, 'captcha_solver') and self.captcha_solver:
+        #     try:
+        #         if captcha_type == 'recaptcha':
+        #             site_key = self.page.evaluate(f'document.querySelector("{selector}").getAttribute("data-sitekey")')
+        #             return self.captcha_solver.solve_recaptcha(self.page.url, site_key)
+        #         elif captcha_type == 'image':
+        #             image_b64 = self.page.evaluate(f'document.querySelector("{selector}").src.split(",")[1]')
+        #             return self.captcha_solver.solve_image_captcha(image_b64)
+        #     except Exception as e:
+        #         self.logger.error(f"Error solving CAPTCHA: {e}")
+        
+        return None

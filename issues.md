@@ -18,6 +18,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 13: Implement StaticScraper Concrete Class](docs/issues/story13_issues.md)
 - [Story 14: Implement DynamicScraper Concrete Class](docs/issues/story14_issues.md)
 - [Story 15: Implement RequestHandler Module](docs/issues/story15_issues.md)
+- [Story 16: Implement BrowserHandler Module](docs/issues/story16_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -45,6 +46,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 5: Test Design for Floating-Point Comparisons](docs/issues/story5_issues.md#issue-4-test-design-for-floating-point-comparisons)
 - [Story 6: Directory Cleanup in Tests](docs/issues/story6_issues.md#issue-1-directory-cleanup-in-tests)
 - [Story 8: Testing Edge Cases and Error Conditions](docs/issues/story8_issues.md#issue-2-error-information-preservation)
+- [Story 16: Testing Browser Automation Code](docs/issues/story16_issues.md#issue-4-testing-browser-automation-code)
 
 #### Library-Specific Issues
 - [Story 1: Pydantic Validation in Tests](docs/issues/story1_issues.md#issue-3-pydantic-validation-in-tests)
@@ -64,6 +66,10 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Integration Testing with Real Browsers](docs/issues/story4_issues.md#issue-7-integration-testing-with-real-browsers)
 - [Story 4: System Dependencies for Playwright](docs/issues/story4_issues.md#issue-8-system-dependencies-for-playwright)
 - [Story 14: Resource Management with Context Managers](docs/issues/story14_issues.md#issue-2-resource-management-with-context-managers)
+- [Story 16: Resource Management with Context Managers](docs/issues/story16_issues.md#issue-1-resource-management-with-context-managers)
+- [Story 16: Stealth Mode Implementation](docs/issues/story16_issues.md#issue-2-stealth-mode-implementation)
+- [Story 16: Error Handling in Browser Automation](docs/issues/story16_issues.md#issue-3-error-handling-in-browser-automation)
+- [Story 16: CAPTCHA Handling Integration](docs/issues/story16_issues.md#issue-5-captcha-handling-integration)
 
 #### Data Handling Issues
 - [Story 5: Error Handling in HTML Parser](docs/issues/story5_issues.md#issue-2-error-handling-in-html-parser)
@@ -87,6 +93,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)
 - [Story 10: Resource Management with Context Managers](docs/issues/story10_issues.md#issue-2-resource-management-with-context-managers)
 - [Story 14: Resource Management with Context Managers](docs/issues/story14_issues.md#issue-2-resource-management-with-context-managers)
+- [Story 16: Resource Management with Context Managers](docs/issues/story16_issues.md#issue-1-resource-management-with-context-managers)
 
 #### Validation and Type Handling
 - [Story 9: Type Handling in Pydantic Model](docs/issues/story9_issues.md#issue-3-type-handling-in-pydantic-model)

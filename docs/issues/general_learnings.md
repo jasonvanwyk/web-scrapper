@@ -168,6 +168,16 @@ This document captures general learnings and best practices derived from challen
 
 4. **Error Recovery**: Implement robust error handling with appropriate recovery mechanisms for common browser automation failures.
 
+5. **Context Manager Implementation**: For browser automation classes, implement both `__enter__` and `__exit__` methods along with explicit cleanup methods to ensure resources are properly managed in all usage scenarios.
+
+6. **Human-like Behavior**: Add random delays and realistic interaction patterns to mimic human behavior and reduce detection risk.
+
+7. **CAPTCHA Handling Strategy**: Design clear integration points for CAPTCHA solving services, even if the actual implementation is deferred to a later stage.
+
+8. **Flexible Configuration**: Make browser automation components highly configurable with sensible defaults to accommodate various scraping scenarios.
+
+9. **Comprehensive Logging**: Include detailed logging for all browser operations to facilitate debugging of automation issues.
+
 ## Development Environment
 
 1. **Environment Setup**: Ensure virtual environments and dependencies are properly set up before running the application.

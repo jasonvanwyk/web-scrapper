@@ -137,6 +137,53 @@ class TestBrowserHandler(unittest.TestCase):
         self.mock_page.evaluate.assert_called_once_with(expression)
         self.assertEqual(result, "Test Page")
 
+    def test_press(self):
+        """Test the press method."""
+        selector = "#test-input"
+        key = "Enter"
+        self.browser_handler.press(selector, key)
+        
+        # Verify that page.press was called with the correct selector and key
+        self.mock_page.press.assert_called_once_with(selector, key, timeout=self.browser_handler.timeout)
+
+    def test_wait_for_function(self):
+        """Test the wait_for_function method."""
+        expression = "() => document.readyState === 'complete'"
+        self.browser_handler.wait_for_function(expression)
+        
+        # Verify that page.wait_for_function was called with the correct expression
+        self.mock_page.wait_for_function.assert_called_once_with(expression, timeout=self.browser_handler.timeout)
+
+    def test_handle_dialog(self):
+        """Test the handle_dialog method."""
+        # Test setting up a dialog handler
+        self.browser_handler.handle_dialog(dialog_type="accept", prompt_text="test input")
+        
+        # Verify that page.on was called with "dialog" event
+        self.mock_page.on.assert_called_once()
+        args, _ = self.mock_page.on.call_args
+        self.assertEqual(args[0], "dialog")
+        
+        # Test the dialog handler function
+        dialog_handler = args[1]
+        mock_dialog = MagicMock()
+        mock_dialog.type = "prompt"
+        
+        # Call the dialog handler
+        dialog_handler(mock_dialog)
+        
+        # Verify that dialog.accept was called with the prompt text
+        mock_dialog.accept.assert_called_once_with("test input")
+
+    def test_solve_captcha(self):
+        """Test the solve_captcha method."""
+        captcha_type = "recaptcha"
+        selector = "#g-recaptcha"
+        
+        # Since this is just a placeholder method that returns None, we just verify it runs
+        result = self.browser_handler.solve_captcha(captcha_type, selector)
+        self.assertIsNone(result)
+
     def test_close(self):
         """Test the close method."""
         self.browser_handler.close()
