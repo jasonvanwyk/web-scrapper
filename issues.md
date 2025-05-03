@@ -10,6 +10,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 4: Dynamic Browser Scraper Implementation](docs/issues/story4_issues.md)
 - [Story 5: HTML Parsing & Data Transformation Module](docs/issues/story5_issues.md)
 - [Story 6: CSV Output Storage Module](docs/issues/story6_issues.md)
+- [Story 7: Basic Image Handling (URL Extraction)](docs/issues/story7_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -54,6 +55,8 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 5: Error Handling in HTML Parser](docs/issues/story5_issues.md#issue-2-error-handling-in-html-parser)
 - [Story 5: Integration with Existing Scrapers](docs/issues/story5_issues.md#issue-3-integration-with-existing-scrapers)
 - [Story 6: UTF-8 Encoding for International Characters](docs/issues/story6_issues.md#issue-3-utf-8-encoding-for-international-characters)
+- [Story 7: Relative vs. Absolute Image URLs](docs/issues/story7_issues.md#issue-1-relative-vs-absolute-image-urls)
+- [Story 7: Consistent URL Handling Across Scraper Types](docs/issues/story7_issues.md#issue-2-consistent-url-handling-across-scraper-types)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)

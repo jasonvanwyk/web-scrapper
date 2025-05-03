@@ -60,6 +60,10 @@ This document captures general learnings and best practices derived from challen
 
 5. **Character Encoding**: Always specify encoding explicitly (preferably UTF-8) when dealing with text files, especially for international data.
 
+6. **URL Handling**: Always convert relative URLs to absolute URLs when they will be used outside the context of the original website. This makes the data directly usable without additional processing.
+
+7. **Consistent Data Formats**: Ensure consistent data formats across different implementations of similar functionality to simplify downstream processing.
+
 ## Resource Management
 
 1. **Context Managers**: Implement and use context managers (`__enter__` and `__exit__` methods) for classes that manage resources like file handles, network connections, or database sessions.

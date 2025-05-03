@@ -280,7 +280,7 @@ class StaticScraper(BaseScraper):
                 "cost": to_float(extract_text(html_content, self.selectors.get('cost', ''))),
                 "price": to_float(extract_text(html_content, self.selectors.get('price', ''))),
                 "colorways": normalize_list(extract_multiple_texts(html_content, self.selectors.get('colorways', ''))),
-                "image_url": extract_image_url(html_content, self.selectors.get('image_url', '')),
+                "image_url": self.build_absolute_url(extract_image_url(html_content, self.selectors.get('image_url', ''))),
             }
             
             # Clean and validate the extracted data
