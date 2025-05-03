@@ -118,6 +118,10 @@ This document captures general learnings and best practices derived from challen
 
 5. **Streaming Operations**: For large files or network operations, implement streaming processing (using iterators or generators) to minimize memory usage and improve efficiency.
 
+6. **Global Resource Tracking**: For resources that might not be properly closed (like file handlers in logging), implement global tracking and cleanup mechanisms using `atexit` or similar approaches to prevent resource leaks.
+
+7. **Cleanup During Reconfiguration**: When reconfiguring systems that manage resources (like logging handlers), ensure existing resources are properly closed before creating new ones.
+
 ## Context Manager Implementation
 
 1. **Complete Context Manager Protocol**: When implementing classes that manage resources (like browser instances), always implement both `__enter__` and `__exit__` methods to support the `with` statement, in addition to explicit cleanup methods like `close()`.
@@ -229,6 +233,34 @@ This document captures general learnings and best practices derived from challen
 9. **Configurable File Paths**: Make file paths configurable to support different environments and use cases, with sensible defaults.
 
 10. **Absolute Paths**: Use absolute paths when dealing with file operations to avoid issues with relative paths and different execution contexts.
+
+## Logging Best Practices
+
+1. **Consistent Log Levels**: Use appropriate log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL) consistently throughout the application to ensure meaningful filtering and monitoring.
+
+2. **Contextual Logging**: Include sufficient context in log messages to make debugging easier, such as operation being performed, relevant identifiers, and current state.
+
+3. **Resource Management**: Ensure proper cleanup of logging resources, especially file handlers, to prevent resource leaks in long-running applications.
+
+4. **Configuration Flexibility**: Make logging configuration flexible through environment variables, configuration files, and direct parameters to accommodate different deployment environments.
+
+5. **Handler Separation**: Separate log message generation from log handling to allow different output destinations (console, file, cloud services) without changing application code.
+
+6. **Error Context Preservation**: Include exception information in error logs using `exc_info=True` to capture stack traces and simplify debugging.
+
+7. **Performance Considerations**: For expensive log messages, check the log level before constructing the message to avoid unnecessary string formatting operations.
+
+## Testing Environment Variables
+
+1. **Complete Environment Replacement**: When testing code that uses environment variables, use `patch.dict('os.environ', {...}, clear=True)` to ensure a clean test environment without interference from actual environment variables.
+
+2. **Environment Priority**: Design code to have a clear priority order for configuration sources (command line, environment variables, config files, defaults) and test each level appropriately.
+
+3. **Isolation Between Tests**: Reset environment variables between tests to prevent test interdependencies and ensure consistent results regardless of test execution order.
+
+4. **Default Fallbacks**: Implement and test fallback mechanisms for when environment variables are not set, ensuring robust behavior in different environments.
+
+5. **Type Conversion**: Test environment variable parsing and type conversion (e.g., string to boolean, string to integer) to ensure correct behavior with different input formats.
 
 ## Library Selection and Integration
 

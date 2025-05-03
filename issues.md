@@ -20,6 +20,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 15: Implement RequestHandler Module](docs/issues/story15_issues.md)
 - [Story 16: Implement BrowserHandler Module](docs/issues/story16_issues.md)
 - [Story 17: Implement Parser & Transformer Module](docs/issues/story17_issues.md)
+- [Story 20: Implement Basic Logging Module Configuration](docs/issues/story20_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -99,10 +100,14 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 10: Resource Management with Context Managers](docs/issues/story10_issues.md#issue-2-resource-management-with-context-managers)
 - [Story 14: Resource Management with Context Managers](docs/issues/story14_issues.md#issue-2-resource-management-with-context-managers)
 - [Story 16: Resource Management with Context Managers](docs/issues/story16_issues.md#issue-1-resource-management-with-context-managers)
+- [Story 20: Resource Management for File Handlers](docs/issues/story20_issues.md#issue-1-resource-management-for-file-handlers)
 
 #### Validation and Type Handling
 - [Story 9: Type Handling in Pydantic Model](docs/issues/story9_issues.md#issue-3-type-handling-in-pydantic-model)
 - [Story 9: None Value Handling in Validation Functions](docs/issues/story9_issues.md#issue-5-none-value-handling-in-validation-functions)
+
+#### Configuration and Environment Variables
+- [Story 20: Environment Variable Handling in Tests](docs/issues/story20_issues.md#issue-2-environment-variable-handling-in-tests)
 
 ## Summary of Key Learnings
 
