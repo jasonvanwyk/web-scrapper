@@ -106,6 +106,8 @@ This document captures general learnings and best practices derived from challen
 
 4. **Resource Lifecycle Logging**: Log resource lifecycle events (creation, opening, closing) at appropriate levels to aid debugging.
 
+5. **Streaming Operations**: For large files or network operations, implement streaming processing (using iterators or generators) to minimize memory usage and improve efficiency.
+
 ## System Dependencies and Integration
 
 1. **Beyond Package Dependencies**: For complex tools like browser automation, be aware of system-level dependencies that may be required beyond Python packages.
@@ -115,6 +117,22 @@ This document captures general learnings and best practices derived from challen
 3. **Containerization Consideration**: For projects with complex dependencies, consider containerization (Docker) to ensure consistent environments across development, testing, and production.
 
 4. **Skippable Integration Tests**: Design integration tests to be skippable in environments where all dependencies cannot be installed, using environment variables to control test execution.
+
+## Network Operations and Image Handling
+
+1. **Streaming Downloads**: When downloading potentially large files like images, use streaming downloads with appropriate chunk sizes to manage memory efficiently.
+
+2. **Content Type Validation**: Always validate the content type of downloaded resources to ensure they match expectations (e.g., checking that an image URL actually returns image content).
+
+3. **URL Parsing**: Use dedicated libraries like `urllib.parse` for URL manipulation rather than string operations to handle edge cases properly.
+
+4. **Fallback Mechanisms**: Implement graceful fallbacks for network operations, such as returning original URLs when image downloads fail.
+
+5. **Configurable Timeouts**: Make network request timeouts configurable to accommodate different network conditions and server response times.
+
+6. **Session Management**: Use session objects (like `requests.Session`) for multiple related requests to benefit from connection pooling and cookie persistence.
+
+7. **Filename Generation**: When generating filenames from URLs or other external data, implement robust handling for special characters, missing extensions, and uniqueness.
 
 ## Browser Automation Best Practices
 
