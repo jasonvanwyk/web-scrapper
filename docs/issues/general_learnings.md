@@ -98,6 +98,28 @@ This document captures general learnings and best practices derived from challen
 
 13. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
 
+## HTML Parsing and Data Extraction
+
+1. **Multiple Selector Support**: When implementing HTML parsing, support multiple selector types (CSS, XPath) to provide flexibility for different use cases. Use specialized libraries for each selector type rather than relying on limited built-in support.
+
+2. **Type-Aware Processing**: Design functions to handle different input types explicitly rather than relying on duck typing for critical parsing operations. Document expected input types clearly.
+
+3. **Error Preservation**: Ensure error information is preserved throughout the data processing pipeline to maintain context about failures and simplify debugging.
+
+4. **None Value Handling**: Be explicit about how None values are handled in data processing functions. Consider whether to convert to defaults, raise errors, or handle specially.
+
+5. **Currency and Number Formats**: Implement robust handling for different currency symbols, codes, and number formats from various regions to ensure consistent data extraction.
+
+6. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
+
+7. **Selector Precedence**: When supporting multiple selector types (CSS, XPath), establish a clear precedence order and fallback strategy to ensure consistent behavior.
+
+8. **Input Type Flexibility**: Design parsing functions to handle different input types (strings, BeautifulSoup objects, Tag objects) to support various usage scenarios and improve code reusability.
+
+9. **URL Normalization**: Always normalize URLs extracted from HTML content by converting relative URLs to absolute URLs using the base URL of the source page.
+
+10. **Structured Data Extraction**: Implement dedicated functions for extracting structured data (multiple fields at once) to reduce code duplication and improve maintainability.
+
 ## Validation and Type Handling
 
 1. **Input Validation Strategy**: Implement validation as close to the data source as possible, but also consider validation at system boundaries and before critical operations.

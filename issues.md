@@ -22,6 +22,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 17: Implement Parser & Transformer Module](docs/issues/story17_issues.md)
 - [Story 20: Implement Basic Logging Module Configuration](docs/issues/story20_issues.md)
 - [Story 21: Implement Secure Configuration Loading](docs/issues/story21_issues.md)
+- [Story 22: HTML/Data Parser Module](docs/issues/story22_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
@@ -88,6 +89,9 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 9: URL Validation Regex Pattern](docs/issues/story9_issues.md#issue-2-url-validation-regex-pattern)
 - [Story 10: UTF-8 Encoding for International Characters](docs/issues/story10_issues.md#issue-3-utf-8-encoding-for-international-characters)
 - [Story 14: Data Processing in extract_data Method](docs/issues/story14_issues.md#issue-3-data-processing-in-extract_data-method)
+- [Story 22: Handling Different HTML Content Types](docs/issues/story22_issues.md#issue-1-handling-different-html-content-types)
+- [Story 22: Relative URL Resolution](docs/issues/story22_issues.md#issue-3-relative-url-resolution)
+- [Story 22: International Number Format Handling](docs/issues/story22_issues.md#issue-5-international-number-format-handling)
 
 #### Integration and Reuse
 - [Story 8: Integration with Existing Modules](docs/issues/story8_issues.md#issue-4-integration-with-existing-modules)
@@ -95,6 +99,8 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 14: Missing Abstract Method Implementation](docs/issues/story14_issues.md#issue-1-missing-maps_to_products-method)
 - [Story 17: Integration vs. Duplication](docs/issues/story17_issues.md#issue-1-integration-vs-duplication)
 - [Story 17: Maintaining Compatibility with Existing Code](docs/issues/story17_issues.md#issue-4-maintaining-compatibility-with-existing-code)
+- [Story 22: Integrating XPath and CSS Selector Support](docs/issues/story22_issues.md#issue-2-integrating-xpath-and-css-selector-support)
+- [Story 22: Error Handling and Information Preservation](docs/issues/story22_issues.md#issue-4-error-handling-and-information-preservation)
 
 #### Resource Management
 - [Story 6: Context Manager Implementation](docs/issues/story6_issues.md#issue-4-context-manager-implementation)

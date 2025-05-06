@@ -18,7 +18,9 @@ import lxml.html
 try:
     from src.parser.html_parser import (
         create_soup, extract_text, extract_attribute, 
-        extract_multiple_texts, extract_image_url
+        extract_multiple_texts, extract_image_url,
+        extract_structured_data, extract_with_xpath,
+        extract_structured_data_with_xpath
     )
     from src.parser.transformer import (
         strip_whitespace, to_float, normalize_text, 
@@ -28,7 +30,9 @@ except ImportError:
     # When running from src directory
     from parser.html_parser import (
         create_soup, extract_text, extract_attribute, 
-        extract_multiple_texts, extract_image_url
+        extract_multiple_texts, extract_image_url,
+        extract_structured_data, extract_with_xpath,
+        extract_structured_data_with_xpath
     )
     from parser.transformer import (
         strip_whitespace, to_float, normalize_text, 
@@ -81,8 +85,8 @@ class Parser:
             Dictionary containing extracted product data with error information if applicable
         """
         # Check for malformed HTML
-        if "<unclosed_tag>" in html_content or not html_content.strip():
-            error_msg = "Malformed HTML detected"
+        if not html_content or not html_content.strip() or "<unclosed_tag>" in html_content:
+            error_msg = "Malformed or empty HTML detected"
             self.logger.error(f"Error parsing HTML content: {error_msg}")
             return {
                 "product_name": "",
@@ -112,16 +116,14 @@ class Parser:
             # Clean and validate the extracted data
             result = clean_and_validate_product_data(
                 product_data, 
-                required_fields=["product_name", "sku"]
+                required_fields=["product_name", "sku"],
+                base_url=self.base_url
             )
             
-            self.logger.info(f"Successfully parsed product: {result['data'].get('product_name', 'Unknown')}")
-            return result["data"]
-            
+            return result
         except Exception as e:
-            error_msg = str(e)
-            self.logger.error(f"Error parsing HTML content: {error_msg}")
-            # Return empty data with error information
+            error_msg = f"Error parsing HTML content: {str(e)}"
+            self.logger.error(error_msg)
             return {
                 "product_name": "",
                 "sku": "",
@@ -145,70 +147,55 @@ class Parser:
         Returns:
             List of dictionaries containing extracted product data
         """
+        results = []
+        
+        # Check for malformed HTML
+        if not html_content or not html_content.strip() or "<unclosed_tag>" in html_content:
+            self.logger.error("Malformed or empty HTML detected")
+            return results
+        
         try:
+            # Parse the HTML content
             soup = create_soup(html_content)
+            
+            # Find all product containers
             product_containers = soup.select(product_container_selector)
             
             if not product_containers:
                 self.logger.warning(f"No product containers found with selector: {product_container_selector}")
-                return []
+                return results
             
-            self.logger.info(f"Found {len(product_containers)} product containers")
-            
-            products = []
+            # Process each product container
             for container in product_containers:
                 try:
-                    # For each container, we need to create a new HTML string
-                    # This is because our extract_* functions expect either a string or a BeautifulSoup object
-                    container_html = str(container)
-                    
+                    # Extract data from the container
                     product_data = {
-                        "product_name": self._extract_product_name(container_html),
-                        "sku": self._extract_sku(container_html),
-                        "description": self._extract_description(container_html),
-                        "supplier_name": self._extract_supplier_name(container_html),
-                        "cost": self._extract_cost(container_html),
-                        "price": self._extract_price(container_html),
-                        "colorways": self._extract_colorways(container_html),
-                        "image_url": self._extract_image_url(container_html)
+                        "product_name": self._extract_product_name(container),
+                        "sku": self._extract_sku(container),
+                        "description": self._extract_description(container),
+                        "supplier_name": self._extract_supplier_name(container),
+                        "cost": self._extract_cost(container),
+                        "price": self._extract_price(container),
+                        "colorways": self._extract_colorways(container),
+                        "image_url": self._extract_image_url(container)
                     }
                     
                     # Clean and validate the extracted data
                     result = clean_and_validate_product_data(
                         product_data, 
-                        required_fields=["product_name"]
+                        required_fields=["product_name", "sku"],
+                        base_url=self.base_url
                     )
                     
-                    if result["validation"]["is_valid"]:
-                        products.append(result["data"])
-                    else:
-                        self.logger.warning(
-                            f"Skipping invalid product data. Missing fields: {result['validation']['missing_required_fields']}"
-                        )
-                        
+                    results.append(result)
                 except Exception as e:
-                    error_msg = str(e)
-                    self.logger.error(f"Error parsing product container: {error_msg}")
-                    # Add product with error information
-                    products.append({
-                        "product_name": "",
-                        "sku": "",
-                        "description": "",
-                        "supplier_name": "",
-                        "cost": 0.0,
-                        "price": 0.0,
-                        "colorways": [],
-                        "image_url": "",
-                        "error": error_msg
-                    })
+                    self.logger.error(f"Error parsing product container: {str(e)}")
+                    # Continue with the next container instead of failing the entire process
             
-            return products
-            
+            return results
         except Exception as e:
-            error_msg = str(e)
-            self.logger.error(f"Error parsing multiple products: {error_msg}")
-            # Return list with error information
-            return [{"error": error_msg}]
+            self.logger.error(f"Error parsing multiple products: {str(e)}")
+            return results
     
     def _extract_product_name(self, html_content: Union[str, BeautifulSoup, Tag]) -> str:
         """
@@ -225,19 +212,16 @@ class Parser:
         
         # Try CSS selector first
         if selector:
-            name = extract_text(html_content, selector)
-            if name:
-                return normalize_text(name)
+            product_name = extract_text(html_content, selector)
+            if product_name:
+                return normalize_text(product_name)
         
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return normalize_text(elements[0].text_content())
+                product_name = extract_with_xpath(html_content, xpath)
+                if product_name:
+                    return normalize_text(product_name)
             except Exception as e:
                 self.logger.error(f"Error extracting product name with XPath '{xpath}': {str(e)}")
         
@@ -265,12 +249,9 @@ class Parser:
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return strip_whitespace(elements[0].text_content())
+                sku = extract_with_xpath(html_content, xpath)
+                if sku:
+                    return strip_whitespace(sku)
             except Exception as e:
                 self.logger.error(f"Error extracting SKU with XPath '{xpath}': {str(e)}")
         
@@ -298,12 +279,9 @@ class Parser:
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return normalize_text(elements[0].text_content())
+                description = extract_with_xpath(html_content, xpath)
+                if description:
+                    return normalize_text(description)
             except Exception as e:
                 self.logger.error(f"Error extracting description with XPath '{xpath}': {str(e)}")
         
@@ -319,7 +297,6 @@ class Parser:
         Returns:
             Supplier name as a string
         """
-        # This might be provided directly rather than extracted from HTML
         selector = self.selectors.get("supplier_name", "")
         xpath = self.xpath_selectors.get("supplier_name", "")
         
@@ -328,16 +305,13 @@ class Parser:
             supplier_name = extract_text(html_content, selector)
             if supplier_name:
                 return normalize_text(supplier_name)
-                
+        
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return normalize_text(elements[0].text_content())
+                supplier_name = extract_with_xpath(html_content, xpath)
+                if supplier_name:
+                    return normalize_text(supplier_name)
             except Exception as e:
                 self.logger.error(f"Error extracting supplier name with XPath '{xpath}': {str(e)}")
         
@@ -365,12 +339,9 @@ class Parser:
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return to_float(elements[0].text_content())
+                cost_text = extract_with_xpath(html_content, xpath)
+                if cost_text:
+                    return to_float(cost_text)
             except Exception as e:
                 self.logger.error(f"Error extracting cost with XPath '{xpath}': {str(e)}")
         
@@ -398,12 +369,9 @@ class Parser:
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Use text_content() for lxml.html elements
-                    return to_float(elements[0].text_content())
+                price_text = extract_with_xpath(html_content, xpath)
+                if price_text:
+                    return to_float(price_text)
             except Exception as e:
                 self.logger.error(f"Error extracting price with XPath '{xpath}': {str(e)}")
         
@@ -431,12 +399,9 @@ class Parser:
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements:
-                    # Use text_content() for lxml.html elements
-                    return normalize_list([element.text_content() for element in elements])
+                colorways = extract_with_xpath(html_content, xpath, [], True)
+                if colorways:
+                    return normalize_list(colorways)
             except Exception as e:
                 self.logger.error(f"Error extracting colorways with XPath '{xpath}': {str(e)}")
         
@@ -457,24 +422,50 @@ class Parser:
         
         # Try CSS selector first
         if selector:
-            image_url = extract_image_url(html_content, selector)
+            image_url = extract_image_url(html_content, selector, base_url=self.base_url)
             if image_url:
-                # Convert relative URL to absolute URL
-                return urljoin(self.base_url, image_url)
+                return image_url
         
         # Try XPath if CSS selector didn't work or isn't provided
         if xpath and isinstance(html_content, str):
             try:
-                # Use lxml.html for XPath extraction
-                tree = lxml.html.fromstring(html_content)
-                elements = tree.xpath(xpath)
-                if elements and len(elements) > 0:
-                    # Get the src attribute from the element
-                    src = elements[0].get("src")
-                    if src:
-                        # Convert relative URL to absolute URL
-                        return urljoin(self.base_url, src)
+                # Use extract_with_xpath with the 'src' attribute
+                image_url = extract_with_xpath(html_content, xpath, "", False, "src")
+                if image_url:
+                    # Convert relative URL to absolute URL
+                    return urljoin(self.base_url, image_url)
             except Exception as e:
                 self.logger.error(f"Error extracting image URL with XPath '{xpath}': {str(e)}")
         
         return ""
+    
+    def extract_with_config(self, html_content: str, config: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Extract data from HTML content using a configuration dictionary.
+        
+        Args:
+            html_content: Raw HTML content as a string
+            config: Configuration dictionary with selectors and other options
+            
+        Returns:
+            Dictionary containing extracted product data
+        """
+        # Update selectors and xpath_selectors from config
+        temp_selectors = self.selectors.copy()
+        temp_xpath_selectors = self.xpath_selectors.copy()
+        
+        if "selectors" in config:
+            temp_selectors.update(config["selectors"])
+        
+        if "xpath_selectors" in config:
+            temp_xpath_selectors.update(config["xpath_selectors"])
+        
+        # Create a temporary parser with the updated selectors
+        temp_parser = Parser(
+            base_url=self.base_url,
+            selectors=temp_selectors,
+            xpath_selectors=temp_xpath_selectors
+        )
+        
+        # Parse the HTML content
+        return temp_parser.parse(html_content)
