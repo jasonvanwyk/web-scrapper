@@ -148,13 +148,9 @@ def main() -> None:
             with csv_writer:
                 csv_writer.write_header(csv_headers)
                 
-                # Get product URLs (this will be implemented in future stories)
-                # For now, we'll use a placeholder
+                # Get product URLs
                 logger.info(f"Getting product URLs for supplier: {supplier.name}")
-                product_urls = []  # This would be populated by scraper.get_product_urls()
-                
-                # For demonstration purposes, add a placeholder product URL
-                product_urls.append("https://example.com/product1")
+                product_urls = scraper.get_product_urls()
                 
                 # Update supplier summary with products found
                 supplier_summary["products_found"] = len(product_urls)
@@ -166,22 +162,12 @@ def main() -> None:
                     try:
                         logger.info(f"Processing product URL: {url}")
                         
-                        # Extract product data (this will be implemented in future stories)
-                        # For now, we'll use placeholder data
-                        product_data = {
-                            "product_name": f"Product from {supplier.name}",
-                            "sku": "SKU123",
-                            "description": "This is a placeholder product description",
-                            "supplier_name": supplier.name,
-                            "cost": "99.99",
-                            "price": "149.99",
-                            "colorways": "Red, Blue, Green",
-                            "image_url": "https://example.com/image.jpg"
-                        }
+                        # Extract product data
+                        product_data = scraper.extract_data(url)
                         
                         # Write the product data to the CSV file
                         csv_writer.write_row(product_data)
-                        logger.info(f"Wrote product data for: {product_data['product_name']}")
+                        logger.info(f"Wrote product data for: {product_data.get('product_name', 'Unknown product')}")
                         
                         # Update summary data
                         summary_data["total_products"] += 1

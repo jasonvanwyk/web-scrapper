@@ -140,7 +140,7 @@ class TestTransformer:
         """Test cleaning and validating product data."""
         # Valid data
         data = {
-            "name": "Test Product",
+            "product_name": "Test Product",
             "sku": "ABC123",
             "description": "This is a test product.",
             "supplier_name": "Test Supplier",
@@ -154,13 +154,13 @@ class TestTransformer:
         assert result["validation"]["is_valid"] is True
         assert len(result["validation"]["missing_required_fields"]) == 0
         
-        assert result["data"]["name"] == "Test Product"
-        assert result["data"]["sku"] == "ABC123"
-        assert result["data"]["description"] == "This is a test product."
-        assert result["data"]["supplier_name"] == "Test Supplier"
-        assert result["data"]["price"] == 123.45
-        assert result["data"]["cost"] == 100.0
-        assert result["data"]["colorways"] == ["Red", "Blue", "Green"]
+        assert result["product_name"] == "Test Product"
+        assert result["sku"] == "ABC123"
+        assert result["description"] == "This is a test product."
+        assert result["supplier_name"] == "Test Supplier"
+        assert result["price"] == 123.45
+        assert result["cost"] == 100.0
+        assert result["colorways"] == ["Red", "Blue", "Green"]
         
         # Invalid data (missing required fields)
         invalid_data = {
@@ -172,16 +172,16 @@ class TestTransformer:
         result = clean_and_validate_product_data(invalid_data)
         
         assert result["validation"]["is_valid"] is False
-        assert "name" in result["validation"]["missing_required_fields"]
+        assert "product_name" in result["validation"]["missing_required_fields"]
         assert "sku" in result["validation"]["missing_required_fields"]
         
         # Custom required fields
         custom_required = {
-            "name": "Test Product",
+            "product_name": "Test Product",
             "price": "$123.45"
         }
         
-        result = clean_and_validate_product_data(custom_required, required_fields=["name", "price"])
+        result = clean_and_validate_product_data(custom_required, required_fields=["product_name", "price"])
         
         assert result["validation"]["is_valid"] is True
         assert len(result["validation"]["missing_required_fields"]) == 0

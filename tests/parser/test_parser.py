@@ -233,7 +233,7 @@ class TestParser(unittest.TestCase):
             results = self.parser.parse_multiple(self.multi_product_html, ".product-container")
             
             # Should still return results from the first successful parse
-            self.assertEqual(len(results), 0)
+            self.assertEqual(len(results), 1)
 
     def test_absolute_url_conversion(self):
         """Test that relative URLs are converted to absolute URLs."""
