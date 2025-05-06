@@ -200,3 +200,18 @@ class CSVWriter:
             except Exception as e:
                 logger.error(f"Error closing CSV file: {str(e)}")
                 raise
+                
+    def get_output_filename(self) -> Optional[str]:
+        """
+        Get the full path to the output file.
+        
+        Returns:
+            str: The full path to the output file, or None if the file hasn't been opened
+        """
+        if not self.filename:
+            return None
+            
+        if self.storage_config:
+            return self.storage_config.get_csv_filepath(self.filename)
+        else:
+            return os.path.join(self.output_path, self.filename)

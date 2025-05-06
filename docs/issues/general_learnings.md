@@ -40,6 +40,18 @@ This document captures general learnings and best practices derived from challen
 
 13. **Testing External Services**: When testing components that interact with external services (like email or Slack), use mocks to simulate the service behavior without making actual external calls. This makes tests faster, more reliable, and independent of external services.
 
+14. **Test Against Actual Implementation**: Always ensure that tests are written against the actual implementation, not an assumed implementation. This requires understanding how the code actually works before writing tests.
+
+15. **Check for Required Resources**: Before running tests, ensure that all required resources (like directories for log files) exist. This can be done as part of the test setup.
+
+16. **Understand Implementation Details**: When writing tests, it's important to understand the implementation details of the code being tested. Understanding how the code actually works is crucial for writing effective tests.
+
+17. **Adapt Tests to Reality**: Sometimes, the actual implementation might differ from the expected or ideal implementation. In such cases, it's better to adapt the tests to match the reality rather than forcing the implementation to match the tests, especially if the implementation is already working as intended in the broader context.
+
+18. **QA Testing Preparation**: Before running QA tests, ensure that all dependencies and infrastructure are properly set up. This includes creating necessary directories, setting up environment variables, and ensuring that all required services are available.
+
+19. **Mock Configuration in Tests**: When testing components that rely on configuration, use mocks to provide a controlled configuration environment. This ensures that tests are not affected by changes to the actual configuration.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
