@@ -10,6 +10,8 @@ This document captures general learnings and best practices derived from challen
 
 3. **Import Strategies**: Consider how your application will be imported and executed from different contexts. Use try/except blocks for imports when necessary, but consider proper Python packaging for larger projects.
 
+4. **Modular Design**: Design modules with clear interfaces and separation of concerns to enable easy extension and maintenance. Use abstract base classes to define interfaces for different implementations.
+
 ## Testing Best Practices
 
 1. **Test Behavior, Not Implementation**: Write tests that directly test behavior rather than implementation details when possible. This makes tests more resilient to refactoring.
@@ -36,6 +38,8 @@ This document captures general learnings and best practices derived from challen
 
 12. **Cache Key Format Testing**: When testing caching mechanisms, it's important to understand the exact format of cache keys used by the implementation. Inspect the implementation carefully or use debugging to determine the actual key format rather than making assumptions.
 
+13. **Testing External Services**: When testing components that interact with external services (like email or Slack), use mocks to simulate the service behavior without making actual external calls. This makes tests faster, more reliable, and independent of external services.
+
 ## Error Handling and Resilience
 
 1. **Robust Error Handling**: Implement comprehensive error handling from the beginning to make debugging easier and improve application resilience.
@@ -50,6 +54,8 @@ This document captures general learnings and best practices derived from challen
 
 6. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline and included in the final output. This helps with debugging and provides better feedback to users.
 
+7. **Notification on Errors**: Implement a notification system to alert users or administrators about errors, especially for automated processes that run without direct supervision.
+
 ## Component Design and Integration
 
 1. **Backward Compatibility**: When enhancing existing components, maintain backward compatibility to avoid breaking existing code. Use type checking and conditional logic to handle different input types gracefully.
@@ -63,6 +69,8 @@ This document captures general learnings and best practices derived from challen
 5. **Storage Abstraction**: When dealing with file storage, create abstractions that can handle different storage backends (local filesystem, cloud storage) to make the application more flexible and adaptable to different deployment environments.
 
 6. **Permission Management**: Handle file and directory permissions explicitly, especially in applications that create or modify files. Use sensible defaults and make permissions configurable when appropriate.
+
+7. **Factory Pattern**: Use factory patterns to create instances of components based on configuration, making it easier to add new implementations without modifying existing code.
 
 ## Configuration and Validation
 
@@ -82,6 +90,8 @@ This document captures general learnings and best practices derived from challen
 
 8. **Configuration Documentation**: Document all configuration options, their default values, and expected formats to make the system easier to configure correctly.
 
+9. **Sensitive Information Handling**: Use specialized types like `SecretStr` for sensitive information to prevent accidental exposure in logs or error messages.
+
 ## Data Processing and Transformation
 
 1. **Internationalization**: Consider different regional formats when handling numeric and date data. Implement robust parsing for different number formats (e.g., US vs. European).
@@ -100,45 +110,21 @@ This document captures general learnings and best practices derived from challen
 
 8. **Multiple Selector Support**: When implementing HTML parsing, consider supporting multiple selector types (CSS, XPath) to provide flexibility for different use cases. Use specialized libraries for each selector type rather than relying on limited built-in support.
 
-9. **Type-Aware Processing**: Design functions to handle different input types explicitly rather than relying on duck typing for critical parsing operations. Document expected input types clearly.
+## Notification System Design
 
-10. **Error Preservation**: Ensure error information is preserved throughout the data processing pipeline to maintain context about failures and simplify debugging.
+1. **Multiple Channel Support**: Design notification systems to support multiple channels (email, Slack, etc.) with a common interface to provide flexibility for different use cases.
 
-11. **None Value Handling**: Be explicit about how None values are handled in data processing functions. Consider whether to convert to defaults, raise errors, or handle specially.
+2. **Message Formatting**: Implement appropriate formatting for different notification channels, considering the capabilities and limitations of each channel.
 
-12. **Currency and Number Formats**: Implement robust handling for different currency symbols, codes, and number formats from various regions to ensure consistent data extraction.
+3. **Notification Types**: Define different types of notifications (completion, error, summary) with appropriate content and formatting for each type.
 
-13. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
+4. **Selective Notification**: Allow users to configure which notifications they want to receive and through which channels to avoid notification fatigue.
 
-14. **Defensive Type Conversion**: Always wrap type conversion operations in try-except blocks to handle unexpected input formats gracefully. Provide meaningful default values and log issues for debugging.
+5. **Secure Credential Storage**: Handle notification credentials (SMTP passwords, API keys) securely using environment variables or secure storage mechanisms.
 
-15. **Empty Data Handling**: Design data processing components to handle empty or incomplete data gracefully, providing default values for missing fields to maintain a consistent data structure.
+6. **Error Handling in Notifications**: Implement robust error handling in notification systems to ensure that notification failures don't affect the main application functionality.
 
-16. **Non-String Value Handling**: When processing fields that are expected to be strings (like URLs), implement explicit handling for non-string values to prevent type errors in downstream components.
-
-17. **Default Value Strategy**: Establish a consistent strategy for default values across your application. For example, use empty strings for text fields, 0.0 for numeric fields, and empty lists for collection fields.
-
-## HTML Parsing and Data Extraction
-
-1. **Multiple Selector Support**: When implementing HTML parsing, support multiple selector types (CSS, XPath) to provide flexibility for different use cases. Use specialized libraries for each selector type rather than relying on limited built-in support.
-
-2. **Type-Aware Processing**: Design functions to handle different input types explicitly rather than relying on duck typing for critical parsing operations. Document expected input types clearly.
-
-3. **Error Preservation**: Ensure error information is preserved throughout the data processing pipeline to maintain context about failures and simplify debugging.
-
-4. **None Value Handling**: Be explicit about how None values are handled in data processing functions. Consider whether to convert to defaults, raise errors, or handle specially.
-
-5. **Currency and Number Formats**: Implement robust handling for different currency symbols, codes, and number formats from various regions to ensure consistent data extraction.
-
-6. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
-
-7. **Selector Precedence**: When supporting multiple selector types (CSS, XPath), establish a clear precedence order and fallback strategy to ensure consistent behavior.
-
-8. **Input Type Flexibility**: Design parsing functions to handle different input types (strings, BeautifulSoup objects, Tag objects) to support various usage scenarios and improve code reusability.
-
-9. **URL Normalization**: Always normalize URLs extracted from HTML content by converting relative URLs to absolute URLs using the base URL of the source page.
-
-10. **Structured Data Extraction**: Implement dedicated functions for extracting structured data (multiple fields at once) to reduce code duplication and improve maintainability.
+7. **Documentation**: Provide comprehensive documentation for notification systems, including configuration options, message formats, and troubleshooting tips.
 
 ## Validation and Type Handling
 

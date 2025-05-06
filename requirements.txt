@@ -17,3 +17,7 @@ pytest-cov>=4.1.0
 
 # Browser automation
 playwright>=1.40.0
+
+# Optional dependencies
+# For alternative scheduling (not needed if using cron)
+schedule>=1.2.0

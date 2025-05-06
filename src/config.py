@@ -227,6 +227,105 @@ class ScrapingConfig(BaseModel):
     )
 
 
+class EmailNotificationConfig(BaseModel):
+    """Configuration for email notifications."""
+    enabled: bool = Field(
+        default_factory=lambda: get_env_value("EMAIL_NOTIFICATIONS_ENABLED", "False").lower() in ("true", "1", "t"),
+        description="Whether email notifications are enabled"
+    )
+    smtp_server: str = Field(
+        default_factory=lambda: get_env_value("SMTP_SERVER", "smtp.gmail.com"),
+        description="SMTP server for sending emails"
+    )
+    smtp_port: int = Field(
+        default_factory=lambda: int(get_env_value("SMTP_PORT", "587")),
+        description="SMTP port for sending emails"
+    )
+    sender_email: str = Field(
+        default_factory=lambda: get_env_value("SENDER_EMAIL", ""),
+        description="Email address to send notifications from"
+    )
+    recipient_emails: List[str] = Field(
+        default_factory=lambda: get_env_value("RECIPIENT_EMAILS", "").split(",") if get_env_value("RECIPIENT_EMAILS", "") else [],
+        description="Comma-separated list of email addresses to send notifications to"
+    )
+    username: Optional[str] = Field(
+        default_factory=lambda: get_env_value("SMTP_USERNAME", None),
+        description="Username for SMTP authentication (if different from sender_email)"
+    )
+    password: Optional[SecretStr] = Field(
+        default_factory=lambda: SecretStr(get_env_value("SMTP_PASSWORD", "")) if get_env_value("SMTP_PASSWORD", "") else None,
+        description="Password for SMTP authentication"
+    )
+    use_tls: bool = Field(
+        default_factory=lambda: get_env_value("SMTP_USE_TLS", "True").lower() in ("true", "1", "t"),
+        description="Whether to use TLS for SMTP connection"
+    )
+    
+    def get_password(self) -> Optional[str]:
+        """
+        Get the SMTP password as a string, if set.
+        
+        Returns:
+            Optional[str]: The password as a string, or None if not set
+        """
+        if self.password is None:
+            return None
+        return self.password.get_secret_value()
+
+
+class SlackNotificationConfig(BaseModel):
+    """Configuration for Slack notifications."""
+    enabled: bool = Field(
+        default_factory=lambda: get_env_value("SLACK_NOTIFICATIONS_ENABLED", "False").lower() in ("true", "1", "t"),
+        description="Whether Slack notifications are enabled"
+    )
+    webhook_url: str = Field(
+        default_factory=lambda: get_env_value("SLACK_WEBHOOK_URL", ""),
+        description="Slack webhook URL for sending notifications"
+    )
+    channel: Optional[str] = Field(
+        default_factory=lambda: get_env_value("SLACK_CHANNEL", None),
+        description="Slack channel to send notifications to (optional)"
+    )
+    username: str = Field(
+        default_factory=lambda: get_env_value("SLACK_USERNAME", "Scraper Bot"),
+        description="Username to use for Slack notifications"
+    )
+    icon_emoji: str = Field(
+        default_factory=lambda: get_env_value("SLACK_ICON_EMOJI", ":robot_face:"),
+        description="Emoji to use as the icon for Slack notifications"
+    )
+
+
+class NotificationConfig(BaseModel):
+    """Configuration for notifications."""
+    enabled: bool = Field(
+        default_factory=lambda: get_env_value("NOTIFICATIONS_ENABLED", "False").lower() in ("true", "1", "t"),
+        description="Whether notifications are enabled globally"
+    )
+    send_on_completion: bool = Field(
+        default_factory=lambda: get_env_value("NOTIFY_ON_COMPLETION", "True").lower() in ("true", "1", "t"),
+        description="Whether to send notifications on successful completion"
+    )
+    send_on_error: bool = Field(
+        default_factory=lambda: get_env_value("NOTIFY_ON_ERROR", "True").lower() in ("true", "1", "t"),
+        description="Whether to send notifications on errors"
+    )
+    send_summary: bool = Field(
+        default_factory=lambda: get_env_value("NOTIFY_SUMMARY", "True").lower() in ("true", "1", "t"),
+        description="Whether to send summary notifications"
+    )
+    email: EmailNotificationConfig = Field(
+        default_factory=EmailNotificationConfig,
+        description="Email notification configuration"
+    )
+    slack: SlackNotificationConfig = Field(
+        default_factory=SlackNotificationConfig,
+        description="Slack notification configuration"
+    )
+
+
 class SupplierConfig(BaseModel):
     """Configuration for a supplier."""
     name: str = Field(..., description="Name of the supplier")
@@ -267,6 +366,7 @@ class AppConfig(BaseModel):
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     output: OutputConfig = Field(default_factory=OutputConfig)
     scraping: ScrapingConfig = Field(default_factory=ScrapingConfig)
+    notifications: NotificationConfig = Field(default_factory=NotificationConfig)
     suppliers: List[SupplierConfig] = Field(default_factory=list, description="List of suppliers to scrape")
 
 
@@ -311,6 +411,7 @@ def load_config() -> AppConfig:
         logging=LoggingConfig(),
         output=OutputConfig(),
         scraping=ScrapingConfig(),
+        notifications=NotificationConfig(),
         suppliers=suppliers,
     )
     

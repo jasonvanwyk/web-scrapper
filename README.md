@@ -9,6 +9,7 @@ This tool allows users to:
 - Extract standardized product information (name, SKU, description, supplier, costs, etc.)
 - Output data to CSV files and optionally download images
 - Run on a schedule with minimal intervention
+- Receive notifications about scraper status via email or Slack
 
 ## Project Structure
 
@@ -18,10 +19,16 @@ This tool allows users to:
 │   ├── scrapers/       # Scraper modules
 │   ├── http_client/    # HTTP client modules
 │   ├── browser_automation/ # Browser automation modules
+│   ├── storage/        # Storage modules
+│   ├── notifications/  # Notification modules
+│   ├── scheduler/      # Scheduling modules
+│   ├── utils/          # Utility modules
 │   ├── config.py       # Configuration management
 │   └── main.py         # Main entry point
 ├── tests/              # Test files
 ├── docs/               # Documentation
+├── examples/           # Example scripts
+├── scripts/            # Utility scripts
 ├── .env.example        # Example environment variables
 ├── requirements.txt    # Project dependencies
 └── README.md           # This file
@@ -58,6 +65,57 @@ The `DynamicScraper` is designed for modern websites that rely on JavaScript to 
 
 Configure the browser behavior in your `.env` file using the browser automation settings.
 
+## Scheduling
+
+The application includes a scheduling system that allows you to run the scraper automatically on a regular basis. The scheduler supports:
+
+- Cron-based scheduling (monthly, weekly, daily, etc.)
+- Command-line interface for managing schedules
+- Alternative scheduling using Python's schedule library
+
+For more information, see the [scheduling documentation](docs/scheduling.md).
+
+### Setting Up a Schedule
+
+To set up a monthly schedule (runs at midnight on the 1st day of each month):
+
+```bash
+# Using the command-line interface
+python -m src.scheduler.cli create --schedule "0 0 1 * *"
+
+# Using the setup script
+./scripts/setup_schedule.py
+```
+
+## Notifications
+
+The application includes a notification system that can send alerts about the scraper's status. The notification system supports:
+
+- Email notifications via SMTP
+- Slack notifications via webhooks
+- Completion, error, and summary notifications
+
+For more information, see the [notifications documentation](docs/notifications.md).
+
+### Configuring Notifications
+
+To enable notifications, update your `.env` file with the appropriate settings:
+
+```
+# Global notification settings
+NOTIFICATIONS_ENABLED=True
+NOTIFY_ON_COMPLETION=True
+NOTIFY_ON_ERROR=True
+NOTIFY_SUMMARY=True
+
+# Email notification settings
+EMAIL_NOTIFICATIONS_ENABLED=True
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SENDER_EMAIL=your_email@example.com
+RECIPIENT_EMAILS=recipient1@example.com,recipient2@example.com
+```
+
 ## Testing
 
 ### Unit Tests
@@ -89,6 +147,18 @@ SKIP_INTEGRATION_TESTS=true python -m pytest tests/
 ## Configuration
 
 The application uses environment variables for configuration. See `.env.example` for available options.
+
+## Documentation
+
+- [Scheduling Documentation](docs/scheduling.md)
+- [Notifications Documentation](docs/notifications.md)
+
+## Examples
+
+The `examples/` directory contains example scripts that demonstrate how to use various features of the application:
+
+- `schedule_with_python_library.py`: Example of using the Python schedule library
+- `notification_example.py`: Example of using the notification system
 
 ## License
 
