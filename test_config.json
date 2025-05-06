@@ -1,0 +1,28 @@
+{
+  "suppliers": [
+    {
+      "name": "books_to_scrape",
+      "url": "http://books.toscrape.com/",
+      "requires_login": false,
+      "scraper_type": "static",
+      "selectors": {
+        "product_link": "article.product_pod div.image_container a",
+        "product_name": "div.product_main h1",
+        "sku": "table.table-striped tr:nth-child(1) td",
+        "price": "p.price_color",
+        "description": "div#product_description + p",
+        "image_url": "div.item.active img"
+      }
+    }
+  ],
+  "output": {
+    "output_dir": "./output",
+    "filename_pattern": "{supplier}_{timestamp}.csv",
+    "include_timestamp": true,
+    "csv_encoding": "utf-8",
+    "download_images": false
+  },
+  "notifications": {
+    "enabled": false
+  }
+}

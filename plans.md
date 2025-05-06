@@ -58,6 +58,7 @@ Based on the revised epic-stories list, we've made excellent progress on the web
   - [x] Test against real supplier sites
   - [x] Validate output accuracy
   - [x] Verify reliability
+  - [x] Create custom configuration loader for testing with different websites
 
 ## Optional Enhancements (If Needed)
 - [ ] Story 21: Implement Proxy Support
@@ -74,6 +75,7 @@ The project has been successfully completed! All essential epics and stories hav
 4. Automation and scheduling capabilities
 5. Comprehensive notification system
 6. Full test coverage and documentation
+7. Custom configuration loader for testing with different websites
 
 ## Optional Future Enhancements
 
@@ -93,3 +95,5 @@ The optional enhancements (Stories 21-23) could be considered for future iterati
 - Comprehensive documentation has been created for users and developers
 - The system is robust, with proper error handling and notifications
 - QA testing has confirmed the system works as expected with real supplier data
+- Testing with Isivuno Naturals website revealed challenges with dynamic content, leading to the development of a custom configuration loader for testing with different websites
+- Successfully tested the scraper with Books to Scrape website to validate core functionality

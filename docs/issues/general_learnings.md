@@ -50,7 +50,25 @@ This document captures general learnings and best practices derived from challen
 
 18. **QA Testing Preparation**: Before running QA tests, ensure that all dependencies and infrastructure are properly set up. This includes creating necessary directories, setting up environment variables, and ensuring that all required services are available.
 
-19. **Mock Configuration in Tests**: When testing components that rely on configuration, use mocks to provide a controlled configuration environment. This ensures that tests are not affected by changes to the actual configuration.
+19. **Dynamic vs. Static Content**: Be aware that many modern websites use JavaScript to dynamically load content, which can't be scraped using a simple static HTML scraper. For such websites, consider using a headless browser or a dynamic scraper implementation.
+
+20. **Selector Naming Consistency**: Ensure that selector keys in configuration files match exactly what the scraper implementation expects. Mismatches between configuration keys and code expectations can lead to the scraper using default selectors, which may not work for the target website.
+
+21. **Custom Configuration Loading**: Develop a flexible configuration loading mechanism that allows testing with different websites and configurations without modifying the core codebase. This makes it easier to test the scraper with various websites and quickly iterate on selector configurations.
+
+22. **Test with Real Websites**: Always test your scraper with real websites to ensure it can handle real-world scenarios. Use websites designed for scraping practice (like Books to Scrape) for initial testing, then move on to actual target websites.
+
+23. **Inspect Website Structure**: Before configuring selectors, carefully inspect the HTML structure of the target website to understand how content is organized. This helps in creating accurate and robust selectors.
+
+24. **Handle Character Encoding**: Be prepared to handle different character encodings when scraping websites. Some websites may use non-UTF-8 encodings, which can cause issues when processing extracted text.
+
+25. **Respect Website Terms**: Always respect the terms of service and robots.txt of websites you're scraping. Some websites explicitly prohibit scraping, and violating these terms can have legal consequences.
+
+26. **Implement Politeness Measures**: To avoid overloading websites and getting blocked, implement politeness measures like request delays, respecting robots.txt, and using appropriate user agents.
+
+27. **Error Handling for Missing Elements**: Implement robust error handling for cases where expected elements are not found on the page. This prevents the scraper from failing completely when encountering unexpected page structures.
+
+28. **Validate Extracted Data**: Always validate extracted data to ensure it meets expected formats and constraints. This helps catch issues early in the data extraction process.
 
 ## Error Handling and Resilience
 

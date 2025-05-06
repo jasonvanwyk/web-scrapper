@@ -64,6 +64,8 @@ All essential stories have been completed and tested. The project is now ready f
 
 ## Recent Updates
 
+- **2025-05-06**: Added documentation for testing with Isivuno Naturals and Books to Scrape websites
+- **2025-05-06**: Added custom configuration loader for testing with different websites
 - **2025-05-06**: Added documentation for Story 17 (Implement Notifications) issues and resolutions
 - **2025-05-01**: Added documentation for Story 16 (Implement Scheduling) issues and resolutions
 - **2025-04-25**: Added documentation for Story 15 (Configure Output Storage) issues and resolutions
