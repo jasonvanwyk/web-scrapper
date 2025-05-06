@@ -19,6 +19,10 @@ from .parser import Parser
 from .parser_transformer import (
     ParserTransformer, parse_html, parse_multiple_products, transform_data
 )
+from .sanitizer import (
+    sanitize_product_data, sanitize_text_field, sanitize_numeric_field,
+    sanitize_list_field, sanitize_url_field
+)
 
 __all__ = [
     'create_soup', 'extract_text', 'extract_attribute', 
@@ -27,5 +31,7 @@ __all__ = [
     'strip_whitespace', 'to_float', 'normalize_currency', 'normalize_text',
     'normalize_list', 'validate_sku_format', 'validate_required_field',
     'clean_and_validate_product_data',
-    'Parser', 'ParserTransformer', 'parse_html', 'parse_multiple_products', 'transform_data'
+    'Parser', 'ParserTransformer', 'parse_html', 'parse_multiple_products', 'transform_data',
+    'sanitize_product_data', 'sanitize_text_field', 'sanitize_numeric_field',
+    'sanitize_list_field', 'sanitize_url_field'
 ]

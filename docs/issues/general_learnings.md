@@ -98,6 +98,14 @@ This document captures general learnings and best practices derived from challen
 
 13. **HTML Content Sanitization**: When extracting text from HTML, properly remove tags and decode entities to get clean, usable text while preserving the original meaning.
 
+14. **Defensive Type Conversion**: Always wrap type conversion operations in try-except blocks to handle unexpected input formats gracefully. Provide meaningful default values and log issues for debugging.
+
+15. **Empty Data Handling**: Design data processing components to handle empty or incomplete data gracefully, providing default values for missing fields to maintain a consistent data structure.
+
+16. **Non-String Value Handling**: When processing fields that are expected to be strings (like URLs), implement explicit handling for non-string values to prevent type errors in downstream components.
+
+17. **Default Value Strategy**: Establish a consistent strategy for default values across your application. For example, use empty strings for text fields, 0.0 for numeric fields, and empty lists for collection fields.
+
 ## HTML Parsing and Data Extraction
 
 1. **Multiple Selector Support**: When implementing HTML parsing, support multiple selector types (CSS, XPath) to provide flexibility for different use cases. Use specialized libraries for each selector type rather than relying on limited built-in support.
