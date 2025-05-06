@@ -9,8 +9,15 @@ import os
 import logging
 import requests
 from datetime import datetime
-from typing import Optional, Dict, Any
+from pathlib import Path
+from typing import Optional, Dict, Any, Union
 from urllib.parse import urlparse, unquote
+
+try:
+    from src.storage.storage_config import StorageConfig
+except ImportError:
+    # When running from src directory
+    from storage.storage_config import StorageConfig
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +33,7 @@ class ImageHandler:
     
     def __init__(
         self,
-        output_path: str,
+        output_path: Union[str, Path, StorageConfig],
         download_images: bool = False,
         filename_pattern: Optional[str] = None,
         supplier_name: Optional[str] = None,
@@ -39,7 +46,7 @@ class ImageHandler:
         Initialize the ImageHandler.
         
         Args:
-            output_path: Directory path where images will be saved
+            output_path: Directory path where images will be saved or a StorageConfig instance
             download_images: Whether to download images (True) or just return URLs (False)
             filename_pattern: Pattern for the filename (default: "{sku}_{timestamp}.{ext}")
             supplier_name: Name of the supplier (used in filename if provided)
@@ -48,7 +55,14 @@ class ImageHandler:
             timeout: Timeout for image download requests in seconds
             chunk_size: Chunk size for streaming downloads in bytes
         """
-        self.output_path = os.path.abspath(output_path)
+        # Handle different output_path types
+        if isinstance(output_path, StorageConfig):
+            self.storage_config = output_path
+            self.output_path = str(self.storage_config.image_path)
+        else:
+            self.storage_config = None
+            self.output_path = os.path.abspath(str(output_path))
+            
         self.download_images = download_images
         self.filename_pattern = filename_pattern or "{sku}_{timestamp}.{ext}"
         self.supplier_name = supplier_name or "product"
@@ -78,9 +92,14 @@ class ImageHandler:
             self.session = requests.Session()
             logger.debug("Initialized requests session for image downloads")
             
-            # Create output directory if it doesn't exist
-            os.makedirs(self.output_path, exist_ok=True)
-            logger.debug(f"Created output directory: {self.output_path}")
+            # Create output directory if needed
+            if self.storage_config:
+                # Directory creation is handled by StorageConfig
+                pass
+            else:
+                # Create output directory if it doesn't exist
+                os.makedirs(self.output_path, exist_ok=True)
+                logger.debug(f"Created output directory: {self.output_path}")
                 
         return self
         
@@ -195,10 +214,14 @@ class ImageHandler:
             
         # Generate filename
         filename = self._generate_filename(image_url, product_data)
-        filepath = os.path.join(self.output_path, filename)
         
-        # Ensure the output directory exists
-        os.makedirs(self.output_path, exist_ok=True)
+        # Get filepath based on storage configuration
+        if self.storage_config:
+            filepath = self.storage_config.get_image_filepath(filename)
+        else:
+            # Ensure the output directory exists
+            os.makedirs(self.output_path, exist_ok=True)
+            filepath = os.path.join(self.output_path, filename)
         
         # Download the image
         try:
@@ -216,8 +239,12 @@ class ImageHandler:
                     for chunk in response.iter_content(chunk_size=self.chunk_size):
                         if chunk:  # Filter out keep-alive chunks
                             f.write(chunk)
+                
+                # Set file permissions if using StorageConfig
+                if self.storage_config:
+                    self.storage_config.set_file_permissions(filepath)
                             
-            return filepath
+            return str(filepath)
         except requests.RequestException as e:
             logger.error(f"Error downloading image from {image_url}: {str(e)}")
             raise IOError(f"Failed to download image: {str(e)}")

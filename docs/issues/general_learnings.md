@@ -50,7 +50,19 @@ This document captures general learnings and best practices derived from challen
 
 6. **Error Information Preservation**: Ensure error information is preserved throughout the processing pipeline and included in the final output. This helps with debugging and provides better feedback to users.
 
-7. **Retry Mechanism Testing**: Test retry mechanisms thoroughly with different types of failures to ensure they behave as expected. Consider both transient errors that should trigger retries and permanent errors that should fail immediately.
+## Component Design and Integration
+
+1. **Backward Compatibility**: When enhancing existing components, maintain backward compatibility to avoid breaking existing code. Use type checking and conditional logic to handle different input types gracefully.
+
+2. **Extensible Interfaces**: Design interfaces with future extensibility in mind, even if the initial implementation is simple. Use enums, abstract classes, or other mechanisms to define extension points clearly.
+
+3. **Cross-Platform Considerations**: Always consider cross-platform compatibility when implementing system-specific features like file permissions. Use conditional checks and provide platform-specific implementations when necessary.
+
+4. **Configuration vs. Implementation**: Separate configuration from implementation details to make components more flexible and easier to test. Consider using dependency injection or factory patterns to create configurable components.
+
+5. **Storage Abstraction**: When dealing with file storage, create abstractions that can handle different storage backends (local filesystem, cloud storage) to make the application more flexible and adaptable to different deployment environments.
+
+6. **Permission Management**: Handle file and directory permissions explicitly, especially in applications that create or modify files. Use sensible defaults and make permissions configurable when appropriate.
 
 ## Configuration and Validation
 

@@ -9,7 +9,14 @@ import csv
 import os
 import logging
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Optional, Union, Any
+
+try:
+    from src.storage.storage_config import StorageConfig
+except ImportError:
+    # When running from src directory
+    from storage.storage_config import StorageConfig
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +31,7 @@ class CSVWriter:
     
     def __init__(
         self,
-        output_path: str,
+        output_path: Union[str, Path, StorageConfig],
         filename_pattern: Optional[str] = None,
         supplier_name: Optional[str] = None,
         include_timestamp: bool = True,
@@ -35,14 +42,21 @@ class CSVWriter:
         Initialize the CSVWriter.
         
         Args:
-            output_path: Directory path where CSV files will be saved
+            output_path: Directory path where CSV files will be saved or a StorageConfig instance
             filename_pattern: Pattern for the filename (default: "{supplier}_{timestamp}.csv")
             supplier_name: Name of the supplier (used in filename if provided)
             include_timestamp: Whether to include a timestamp in the filename
             encoding: File encoding (default: 'utf-8')
             newline: Newline character(s) to use (default: '' - platform specific)
         """
-        self.output_path = os.path.abspath(output_path)
+        # Handle different output_path types
+        if isinstance(output_path, StorageConfig):
+            self.storage_config = output_path
+            self.output_path = str(self.storage_config.csv_path)
+        else:
+            self.storage_config = None
+            self.output_path = os.path.abspath(str(output_path))
+            
         self.filename_pattern = filename_pattern or "{supplier}_{timestamp}.csv"
         self.supplier_name = supplier_name or "data"
         self.include_timestamp = include_timestamp
@@ -83,18 +97,25 @@ class CSVWriter:
             CSVWriter: Self for method chaining
         """
         try:
-            # Create output directory if it doesn't exist
-            os.makedirs(self.output_path, exist_ok=True)
-            
             # Generate filename
             self.filename = self._generate_filename()
             
-            # Create full path
-            filepath = os.path.join(self.output_path, self.filename)
+            # Create full path and handle directory creation
+            if self.storage_config:
+                # Use StorageConfig for path management
+                filepath = self.storage_config.get_csv_filepath(self.filename)
+            else:
+                # Create output directory if it doesn't exist
+                os.makedirs(self.output_path, exist_ok=True)
+                filepath = os.path.join(self.output_path, self.filename)
             
             # Open file with proper encoding
             self.file = open(filepath, 'w', encoding=self.encoding, newline=self.newline)
             logger.info(f"Opened CSV file for writing: {filepath}")
+            
+            # Set file permissions if using StorageConfig
+            if self.storage_config:
+                self.storage_config.set_file_permissions(filepath)
             
             return self
         except Exception as e:

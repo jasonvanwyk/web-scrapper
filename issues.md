@@ -24,6 +24,7 @@ This document serves as an index to the reorganized issue documentation for the 
 - [Story 21: Implement Secure Configuration Loading](docs/issues/story21_issues.md)
 - [Story 22: HTML/Data Parser Module](docs/issues/story22_issues.md)
 - [Story 23: Implement Data Sanitizer Component](docs/issues/story23_issues.md)
+- [Story 15: Configure Output Storage](docs/issues/story15_storage_config_issues.md)
 - [General Learnings](docs/issues/general_learnings.md)
 
 ## Quick Reference
